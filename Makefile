@@ -6,12 +6,12 @@
 #    By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/02 08:10:39 by bel-amri          #+#    #+#              #
-#    Updated: 2023/03/02 08:28:20 by bel-amri         ###   ########.fr        #
+#    Updated: 2023/03/03 01:02:50 by bel-amri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=			cub3d
-FLAGS=			-Wall -Werror -Wextra
+FLAGS=			#-Wall -Werror -Wextra
 CC=				cc
 HEADERS=		includes/header.h
 SRC_DIR=		src
