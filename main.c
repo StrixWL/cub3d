@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/03 09:44:49 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/04 02:57:41 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	*create_square(t_game game, int d)
 	return (img.img);
 }
 
-void	render_mini_map(t_game game, int d, int len)
+void	render_mini_map(t_game game, int d)
 {
 	void	*square;
 	int		i;
@@ -56,8 +56,8 @@ void	render_mini_map(t_game game, int d, int len)
 	i = 0;
 	while (game.map[i])
 	{
-		x = (i % len) * d;
-		y = (i / len) * d;
+		x = (i % game.map_width) * d;
+		y = (i / game.map_width) * d;
 		if (game.map[i] == '1')
 			mlx_put_image_to_window(game.mlx, game.win, square, x, y);
 		i++;
@@ -71,9 +71,10 @@ int	main(void)
 
 	game.mlx = mlx_init();
 	game.win = mlx_new_window(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");
-	game.map_height = 8;
-	game.map_width = 6;
+	game.map_height = 8; // 8, 4
+	game.map_width = 6; // 6, 22
 	game.minimap_scale = 1;
+	// 8
 	game.map = "\
 111111\
 100P11\
@@ -83,9 +84,15 @@ int	main(void)
 100001\
 100001\
 111111";
-	if (SCREEN_HEIGHT / game.map_height < SCREEN_WIDTH / game.map_width)
-		render_mini_map(game, SCREEN_HEIGHT / game.map_height * game.minimap_scale, game.map_height);
+// 	game.map = "\
+// 1111111111111111111111\
+// 1000000000000000000001\
+// 1000000000000000000001\
+// 1111111111111111111111\
+// ";
+	if (game.map_height > game.map_width)
+		render_mini_map(game, SCREEN_HEIGHT / game.map_height * game.minimap_scale);
 	else
-		render_mini_map(game, SCREEN_WIDTH / game.map_width * game.minimap_scale, game.map_width);
+		render_mini_map(game, SCREEN_WIDTH / game.map_width * game.minimap_scale);
 	mlx_loop(game.mlx);
 }
