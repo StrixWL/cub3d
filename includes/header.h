@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/04 04:13:59 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/04 21:54:10 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define SCREEN_HEIGHT 512
 # define SCREEN_WIDTH 1024
 
+/* -> structs <- */
 typedef struct s_pos
 {
 	int		x;
@@ -43,9 +44,25 @@ typedef struct s_game
 	void		*win;
 	t_img_data	img;
 	char		*map;
+	int			minimap_block_d;
+	int			minimap_player_d;
 	double		minimap_scale;
+	t_pos		player_pos;
 	int			map_height;
 	int			map_width;
 }					t_game;
+
+/* -> prototypes <- */
+/* global */
+t_img_data	*img_save(t_img_data *data);
+
+/* minimap */
+void		put_pixel(int x, int y, int color);
+void		draw_square(int x, int y, int d);
+void		draw_blocks(t_game game, int d);
+
+/* objects */
+t_pos		new_pos(int x, int y);
+t_vector	new_vector(t_pos origin, t_pos direction);
 
 #endif

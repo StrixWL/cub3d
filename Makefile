@@ -6,7 +6,7 @@
 #    By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/02 08:10:39 by bel-amri          #+#    #+#              #
-#    Updated: 2023/03/03 01:02:50 by bel-amri         ###   ########.fr        #
+#    Updated: 2023/03/04 21:16:02 by bel-amri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,10 @@ FLAGS=			#-Wall -Werror -Wextra
 CC=				cc
 HEADERS=		includes/header.h
 SRC_DIR=		src
-SRC_FILES=		main.c
+SRC_FILES=		main.c \
+				src/minimap.c \
+				src/objects.c \
+				src/drawers.c
 
 OBJ_FILES=		$(SRC_FILES:.c=.o)
 
