@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/04 02:43:45 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/04 04:13:59 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,13 @@ typedef struct	s_img_data {
 }				t_img_data;
 typedef struct s_game
 {
-	void	*mlx;
-	void	*win;
-	char	*map;
-	double	minimap_scale;
-	int		map_height;
-	int		map_width;
+	void		*mlx;
+	void		*win;
+	t_img_data	img;
+	char		*map;
+	double		minimap_scale;
+	int			map_height;
+	int			map_width;
 }					t_game;
 
 #endif
