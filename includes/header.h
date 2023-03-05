@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 05:50:28 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/05 11:52:20 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_vector
 	t_pos	origin;
 	t_pos	direction;
 }					t_vector;
-typedef struct	s_img_data {
+typedef struct s_img_data {
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -46,7 +46,7 @@ typedef struct s_game
 	char		*map;
 	int			minimap_block_d;
 	int			minimap_player_d;
-	double		minimap_scale;
+	float		minimap_scale;
 	t_pos		player_pos;
 	int			map_height;
 	int			map_width;

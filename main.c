@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 05:53:10 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/05 13:55:16 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ t_img_data	*img_save(t_img_data *data)
 
 int	render(t_game *game)
 {
-	// draw_player(*game, game->minimap_player_d);
-	draw_line(new_vector(new_pos(10, 10), new_pos(50, 50)));
+	draw_player(*game, game->minimap_player_d);
+	draw_line(new_vector(new_pos(50, 50), new_pos(200, 200)));
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
@@ -43,10 +43,10 @@ int	main(void)
 	game.map_width = 6; // 6, 22
 	game.minimap_scale = 1;
 	game.minimap_block_d = SCREEN_HEIGHT / game.map_height * game.minimap_scale;
-	game.minimap_player_d = game.minimap_block_d * .3;
+	game.minimap_player_d = game.minimap_block_d * .15;
 	game.map = "\
 111111\
-101P11\
+101011\
 101111\
 100011\
 100001\
@@ -59,10 +59,10 @@ int	main(void)
 // 1000000000000000000001\
 // 1111111111111111111111\
 // ";
-	// if (game.map_height > game.map_width)
-	// 	draw_blocks(&game, game.minimap_block_d);
-	// else
-	// 	draw_blocks(&game, game.minimap_block_d);
+	if (game.map_height > game.map_width)
+		draw_blocks(&game, game.minimap_block_d);
+	else
+		draw_blocks(&game, game.minimap_block_d);
 	mlx_loop_hook(game.mlx, render, &game);
 	mlx_loop(game.mlx);
 }

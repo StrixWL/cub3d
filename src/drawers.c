@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 05:56:23 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/05 12:08:18 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,61 @@ void	put_pixel(int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+void	draw_line_with_x(int i, int j, float a, float b)
+{
+	int		y;
+
+	while (i != j)
+	{
+		y = a * i + b;
+		put_pixel(i, y, 0x00FF00);
+		if (i < j)
+			i++;
+		else
+			i--;
+	}
+}
+
+void	draw_line_with_y(int i, int j, float a, float b)
+{
+	int		x;
+
+	while (i != j)
+	{
+		x = (i - b) / a;
+		put_pixel(x, i, 0x00FF00);
+		if (i < j)
+			i++;
+		else
+			i--;
+	}
+}
+
 void	draw_line(t_vector line)
 {
 	int		delta_x;
 	int		delta_y;
-	int		a;
-	int		b;
+	float	a;
+	float	b;
 
-	printf("(%d, %d) (%d, %d)\n", line.origin.x, line.origin.y, line.direction.x, line.direction.y);
-	delta_x = line.origin.x - line.origin.y;
-	delta_y = line.direction.y - line.direction.y;
-	printf("deltaX: %d, deltaY: %d\n", delta_x, delta_y);
-	a = delta_y / delta_x;
+	delta_x = line.origin.x - line.direction.x;
+	if (!delta_x)
+	{
+		while (line.origin.y != line.direction.y)
+		{
+			if (line.origin.y < line.direction.y)
+				line.origin.y++;
+			else
+				line.origin.y--;
+			put_pixel(line.origin.x, line.origin.y, 0x00FF00);
+		}
+		return ;
+	}
+	delta_y = line.origin.y - line.direction.y;
+	a = (float)delta_y / (float)delta_x;
 	b = line.origin.y - a * line.origin.x;
-	printf("y = %dx + %d\n", a, b);
-	// while (line.origin.x < line.direction.x)
-	// {
-	// 	while (line.origin.y < line.direction.y)
-	// 	{
-	// 		put_pixel(line.origin.x, line.origin.y, 0x00FF00);
-	// 		line.origin.y++;
-	// 	}
-	// 	line.origin.x++;
-	// }
+	draw_line_with_x(line.origin.x, line.direction.x, a, b);
+	draw_line_with_y(line.origin.y, line.direction.y, a, b);
 }
 
 void	draw_square(int x, int y, int d, int color)
