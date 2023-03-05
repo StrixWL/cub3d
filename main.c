@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 13:55:16 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/05 17:46:07 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_img_data	*img_save(t_img_data *data)
 int	render(t_game *game)
 {
 	draw_player(*game, game->minimap_player_d);
-	draw_line(new_vector(new_pos(50, 50), new_pos(200, 200)));
+	draw_line(new_vector(new_pos(50, 50), new_pos(200, 200)), game->minimap_scale);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
@@ -33,17 +33,11 @@ int	main(void)
 {
 	t_game	game;
 
-	game.mlx = mlx_init();
-	game.win = mlx_new_window(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");
-	game.img.img = mlx_new_image(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
-	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel,
-					&game.img.line_length, &game.img.endian);
-	img_save(&game.img);
+	/* parsing */
 	game.map_height = 8; // 8, 4
 	game.map_width = 6; // 6, 22
-	game.minimap_scale = 1;
-	game.minimap_block_d = SCREEN_HEIGHT / game.map_height * game.minimap_scale;
-	game.minimap_player_d = game.minimap_block_d * .15;
+	game.player_pos.x = 1;
+	game.player_pos.y = 1;
 	game.map = "\
 111111\
 101011\
@@ -57,12 +51,23 @@ int	main(void)
 // 1111111111111111111111\
 // 1000000000000000000001\
 // 1000000000000000000001\
-// 1111111111111111111111\
-// ";
+// 1111111111111111111111";
+	/* graphics */
+	game.mlx = mlx_init();
+	game.win = mlx_new_window(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");
+	game.img.img = mlx_new_image(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
+	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel,
+					&game.img.line_length, &game.img.endian);
+	img_save(&game.img);
+	game.minimap_scale = 1; // .15
 	if (game.map_height > game.map_width)
-		draw_blocks(&game, game.minimap_block_d);
+		game.minimap_block_d = SCREEN_HEIGHT / game.map_height * game.minimap_scale;
 	else
-		draw_blocks(&game, game.minimap_block_d);
+		game.minimap_block_d = SCREEN_WIDTH / game.map_width * game.minimap_scale;
+	game.minimap_player_d = game.minimap_block_d * .15; // .35
+	game.player_pos.x *= game.minimap_block_d;
+	game.player_pos.y *= game.minimap_block_d;
+	draw_blocks(&game, game.minimap_block_d);
 	mlx_loop_hook(game.mlx, render, &game);
 	mlx_loop(game.mlx);
 }

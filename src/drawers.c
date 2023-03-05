@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 12:08:18 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/05 17:45:18 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,43 +22,44 @@ void	put_pixel(int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_line_with_x(int i, int j, float a, float b)
+void	draw_line_with_x(t_vector line, float a, float b, float scale)
 {
 	int		y;
 
-	while (i != j)
+	while (line.origin.x != line.direction.x)
 	{
-		y = a * i + b;
-		put_pixel(i, y, 0x00FF00);
-		if (i < j)
-			i++;
+		y = a * line.origin.x + b;
+		put_pixel(line.origin.x * scale, y * scale, 0x00FF00);
+		if (line.origin.x < line.direction.x)
+			line.origin.x++;
 		else
-			i--;
+			line.origin.x--;
 	}
 }
 
-void	draw_line_with_y(int i, int j, float a, float b)
+void	draw_line_with_y(t_vector line, float a, float b, float scale)
 {
 	int		x;
 
-	while (i != j)
+	while (line.origin.y != line.direction.y)
 	{
-		x = (i - b) / a;
-		put_pixel(x, i, 0x00FF00);
-		if (i < j)
-			i++;
+		x = (line.origin.y - b) / a;
+		put_pixel(x * scale, line.origin.y * scale, 0x00FF00);
+		if (line.origin.y < line.direction.y)
+			line.origin.y++;
 		else
-			i--;
+			line.origin.y--;
 	}
 }
 
-void	draw_line(t_vector line)
+void	draw_line(t_vector line, float scale)
 {
 	int		delta_x;
 	int		delta_y;
 	float	a;
 	float	b;
 
+	(void)scale;
 	delta_x = line.origin.x - line.direction.x;
 	if (!delta_x)
 	{
@@ -68,15 +69,15 @@ void	draw_line(t_vector line)
 				line.origin.y++;
 			else
 				line.origin.y--;
-			put_pixel(line.origin.x, line.origin.y, 0x00FF00);
+			put_pixel(line.origin.x * scale, line.origin.y * scale, 0x00FF00);
 		}
 		return ;
 	}
 	delta_y = line.origin.y - line.direction.y;
 	a = (float)delta_y / (float)delta_x;
 	b = line.origin.y - a * line.origin.x;
-	draw_line_with_x(line.origin.x, line.direction.x, a, b);
-	draw_line_with_y(line.origin.y, line.direction.y, a, b);
+	draw_line_with_x(line, a, b, scale);
+	draw_line_with_y(line, a, b, scale);
 }
 
 void	draw_square(int x, int y, int d, int color)

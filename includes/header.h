@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 11:52:20 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/05 17:10:05 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void		put_pixel(int x, int y, int color);
 void		draw_square(int x, int y, int d, int color);
 void		draw_blocks(t_game *game, int d);
 void		draw_player(t_game game, int d);
-void		draw_line(t_vector line);
+void		draw_line(t_vector line, float scale);
 
 /* objects */
 t_pos		new_pos(int x, int y);
