@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 17:45:00 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/06 05:55:45 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	draw_blocks(t_game *game, int d)
 
 void	draw_player(t_game game, int d)
 {
-	draw_square((game.player_pos.x + game.minimap_block_d / 2)
+	draw_square((game.player_vector.origin.x)
 		- game.minimap_player_d / 2,
-		(game.player_pos.y + game.minimap_block_d / 2)
+		(game.player_vector.origin.y)
 		- game.minimap_player_d / 2, d, 0x0000FF);
 }

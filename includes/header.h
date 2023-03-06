@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/05 17:10:05 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/06 04:37:56 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,28 @@
 # include <stdio.h>
 # include <string.h>
 # include <unistd.h>
+# include <math.h>
 
 # define SCREEN_HEIGHT 512
 # define SCREEN_WIDTH 1024
+# define DIRECTION_LEN 25
+# define PI 3.141592653589793
+# define RIGHT 124
+# define LEFT 123
+
+/* enums */
+typedef enum e_direction {
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+}				t_direction;
+/* 7it 3arfek 7mar
+	NORTH: LFO9
+	SOUTH: LTE7T
+	WEST: LISER
+	EAST: LIMEN
+*/
 
 /* -> structs <- */
 typedef struct s_pos
@@ -44,12 +63,14 @@ typedef struct s_game
 	void		*win;
 	t_img_data	img;
 	char		*map;
+	int			map_height;
+	int			map_width;
 	int			minimap_block_d;
 	int			minimap_player_d;
 	float		minimap_scale;
-	t_pos		player_pos;
-	int			map_height;
-	int			map_width;
+	t_direction	player_orientation;
+	t_vector	player_vector;
+	int			player_view_angle;
 }					t_game;
 
 /* -> prototypes <- */
