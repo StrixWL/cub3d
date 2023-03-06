@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/06 04:37:56 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/06 18:32:59 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,18 @@
 
 # define SCREEN_HEIGHT 512
 # define SCREEN_WIDTH 1024
+# define MINIMAP_SCALE 1
+# define MINIMAP_PLAYER_SCALE .2
 # define DIRECTION_LEN 25
 # define PI 3.141592653589793
-# define RIGHT 124
-# define LEFT 123
+# define R_RIGHT 124
+# define R_LEFT 123
+# define M_RIGHT 2
+# define M_LEFT 0
+# define M_FORWARD 13
+# define M_BACKWARD 1
+# define ROT_SPEED 5
+# define MVT_SPEED 5
 
 /* enums */
 typedef enum e_direction {
@@ -67,7 +75,6 @@ typedef struct s_game
 	int			map_width;
 	int			minimap_block_d;
 	int			minimap_player_d;
-	float		minimap_scale;
 	t_direction	player_orientation;
 	t_vector	player_vector;
 	int			player_view_angle;
@@ -82,7 +89,7 @@ void		put_pixel(int x, int y, int color);
 void		draw_square(int x, int y, int d, int color);
 void		draw_blocks(t_game *game, int d);
 void		draw_player(t_game game, int d);
-void		draw_line(t_vector line, float scale);
+void		draw_line(t_vector line);
 
 /* objects */
 t_pos		new_pos(int x, int y);

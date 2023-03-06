@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/06 05:55:31 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/06 16:41:31 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,21 @@ void	put_pixel(int x, int y, int color)
 	t_img_data	*data;
 	char		*dst;
 
+	x *= MINIMAP_SCALE;
+	y *= MINIMAP_SCALE;
 	data = img_save(NULL);
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
 
-void	draw_line_with_x(t_vector line, float a, float b, float scale)
+void	draw_line_with_x(t_vector line, float a, float b)
 {
 	int		y;
 
 	while (line.origin.x != line.direction.x)
 	{
 		y = a * line.origin.x + b;
-		put_pixel(line.origin.x * scale, y * scale, 0x00FF00);
+		put_pixel(line.origin.x, y, 0x00FF00);
 		if (line.origin.x < line.direction.x)
 			line.origin.x++;
 		else
@@ -37,14 +39,14 @@ void	draw_line_with_x(t_vector line, float a, float b, float scale)
 	}
 }
 
-void	draw_line_with_y(t_vector line, float a, float b, float scale)
+void	draw_line_with_y(t_vector line, float a, float b)
 {
 	int		x;
 
 	while (line.origin.y != line.direction.y)
 	{
 		x = (line.origin.y - b) / a;
-		put_pixel(x * scale, line.origin.y * scale, 0x00FF00);
+		put_pixel(x, line.origin.y, 0x00FF00);
 		if (line.origin.y < line.direction.y)
 			line.origin.y++;
 		else
@@ -52,14 +54,13 @@ void	draw_line_with_y(t_vector line, float a, float b, float scale)
 	}
 }
 
-void	draw_line(t_vector line, float scale)
+void	draw_line(t_vector line)
 {
 	int		delta_x;
 	int		delta_y;
 	float	a;
 	float	b;
 
-	(void)scale;
 	delta_x = line.origin.x - line.direction.x;
 	if (!delta_x)
 	{
@@ -69,15 +70,15 @@ void	draw_line(t_vector line, float scale)
 				line.origin.y++;
 			else
 				line.origin.y--;
-			put_pixel(line.origin.x * scale, line.origin.y * scale, 0x00FF00);
+			put_pixel(line.origin.x, line.origin.y, 0x00FF00);
 		}
 		return ;
 	}
 	delta_y = line.origin.y - line.direction.y;
 	a = (float)delta_y / (float)delta_x;
 	b = line.origin.y - a * line.origin.x;
-	draw_line_with_x(line, a, b, scale);
-	draw_line_with_y(line, a, b, scale);
+	draw_line_with_x(line, a, b);
+	draw_line_with_y(line, a, b);
 }
 
 void	draw_square(int x, int y, int d, int color)

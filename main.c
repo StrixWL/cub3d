@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/06 05:55:58 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/06 21:55:45 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,43 +41,67 @@ int	render(t_game *game)
 	clear();
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
-	draw_line(game->player_vector, game->minimap_scale);
+	draw_line(game->player_vector);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
 
-// int	keys_handler(int key, t_game *game)
-// {
-// 	printf("%d\n", key);
-// 	return (0);
-// }
-
 int	keys_handler(int keycode, t_game *game)
 {
-	int		x1;
-	int		y1;
-	int		delta_x;
-	int		delta_y;
-	float	teta;
+	double		x1;
+	double		y1;
 
-	teta = 0.1;
-	delta_x = game->player_vector.direction.x - game->player_vector.origin.x;
-	delta_y = game->player_vector.direction.y - game->player_vector.origin.y;
-	if (keycode == LEFT)
+	if (keycode == R_LEFT)
 	{
-		game->player_view_angle -= 5;
+		game->player_view_angle -= ROT_SPEED;
 		x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
         y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
-	if (keycode == RIGHT)
+	if (keycode == R_RIGHT)
 	{
-		game->player_view_angle += 5;
+		game->player_view_angle += ROT_SPEED;
 		x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
         y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
+	}
+	if (keycode == M_FORWARD)
+	{
+		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		game->player_vector.origin.x += x1;
+		game->player_vector.origin.y += y1;
+		game->player_vector.direction.x += x1;
+		game->player_vector.direction.y += y1;
+	}
+	if (keycode == M_BACKWARD)
+	{
+		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		game->player_vector.origin.x -= x1;
+		game->player_vector.origin.y -= y1;
+		game->player_vector.direction.x -= x1;
+		game->player_vector.direction.y -= y1;
+	}
+	if (keycode == M_LEFT)
+	{
+		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		game->player_vector.origin.x += x1;
+		game->player_vector.origin.y -= y1;
+		game->player_vector.direction.x += x1;
+		game->player_vector.direction.y -= y1;
+	}
+	if (keycode == M_RIGHT)
+	{
+		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		game->player_vector.origin.x -= x1;
+		game->player_vector.origin.y += y1;
+		game->player_vector.direction.x -= x1;
+		game->player_vector.direction.y += y1;
 	}
 	return (0);
 }
@@ -89,8 +113,8 @@ int	main(void)
 	/* parsing */
 	game.map_height = 8; // 8, 4
 	game.map_width = 6; // 6, 22
-	game.player_vector.origin.x = 1; // player x position
-	game.player_vector.origin.y = 1; // player y position
+	game.player_vector.origin.x = 4; // player x position
+	game.player_vector.origin.y = 4; // player y position
 	game.player_orientation = WEST;
 	game.map = "\
 111111\
@@ -113,12 +137,11 @@ int	main(void)
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel,
 					&game.img.line_length, &game.img.endian);
 	img_save(&game.img);
-	game.minimap_scale = 1; // .15
 	if (game.map_height > game.map_width)
-		game.minimap_block_d = SCREEN_HEIGHT / game.map_height * game.minimap_scale;
+		game.minimap_block_d = SCREEN_HEIGHT / game.map_height;
 	else
-		game.minimap_block_d = SCREEN_WIDTH / game.map_width * game.minimap_scale;
-	game.minimap_player_d = game.minimap_block_d * .15; // .35
+		game.minimap_block_d = SCREEN_WIDTH / game.map_width;
+	game.minimap_player_d = game.minimap_block_d * MINIMAP_PLAYER_SCALE; // .35
 	game.player_vector.origin.x = game.player_vector.origin.x * game.minimap_block_d + game.minimap_block_d / 2;
 	game.player_vector.origin.y = game.player_vector.origin.y * game.minimap_block_d + game.minimap_block_d / 2;
 	game.player_vector.direction.x = game.player_vector.origin.x;
