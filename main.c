@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 01:20:34 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 05:51:07 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,46 @@ void	clear(void)
 	}
 }
 
-int	render(t_game *game)
+int	key_press_handler(int keycode, t_pressed_keys *pressed_keys)
 {
-	clear();
-	draw_blocks(game, game->minimap_block_d);
-	draw_player(*game, game->minimap_player_d);
-	draw_line(game->player_vector);
-	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+	if (keycode == R_LEFT)
+		pressed_keys->r_left = TRUE;
+	if (keycode == R_RIGHT)
+		pressed_keys->r_right = TRUE;
+	if (keycode == M_FORWARD)
+		pressed_keys->m_forward = TRUE;
+	if (keycode == M_BACKWARD)
+		pressed_keys->m_backward = TRUE;
+	if (keycode == M_LEFT)
+		pressed_keys->m_left = TRUE;
+	if (keycode == M_RIGHT)
+		pressed_keys->m_right = TRUE;
 	return (0);
 }
 
-int	keys_handler(int keycode, t_game *game)
+int	key_release_handler(int keycode, t_pressed_keys *pressed_keys)
+{
+	if (keycode == R_LEFT)
+		pressed_keys->r_left = FALSE;
+	if (keycode == R_RIGHT)
+		pressed_keys->r_right = FALSE;
+	if (keycode == M_FORWARD)
+		pressed_keys->m_forward = FALSE;
+	if (keycode == M_BACKWARD)
+		pressed_keys->m_backward = FALSE;
+	if (keycode == M_LEFT)
+		pressed_keys->m_left = FALSE;
+	if (keycode == M_RIGHT)
+		pressed_keys->m_right = FALSE;
+	return (0);
+}
+
+void	update_player_vector(t_game *game)
 {
 	int		x1;
 	int		y1;
 
-	if (keycode == R_LEFT)
+	if (game->pressed_keys.r_left)
 	{
 		game->player_view_angle -= ROT_SPEED;
 		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
@@ -59,7 +83,7 @@ int	keys_handler(int keycode, t_game *game)
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
-	if (keycode == R_RIGHT)
+	if (game->pressed_keys.r_right)
 	{
 		game->player_view_angle += ROT_SPEED;
 		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
@@ -67,7 +91,7 @@ int	keys_handler(int keycode, t_game *game)
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
-	if (keycode == M_FORWARD)
+	if (game->pressed_keys.m_forward)
 	{
 		x1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
 		y1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
@@ -76,7 +100,7 @@ int	keys_handler(int keycode, t_game *game)
 		game->player_vector.direction.x += x1;
 		game->player_vector.direction.y += y1;
 	}
-	if (keycode == M_BACKWARD)
+	if (game->pressed_keys.m_backward)
 	{
 		x1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
 		y1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
@@ -85,7 +109,7 @@ int	keys_handler(int keycode, t_game *game)
 		game->player_vector.direction.x -= x1;
 		game->player_vector.direction.y -= y1;
 	}
-	if (keycode == M_LEFT)
+	if (game->pressed_keys.m_left)
 	{
 		x1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
 		y1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
@@ -94,7 +118,7 @@ int	keys_handler(int keycode, t_game *game)
 		game->player_vector.direction.x += x1;
 		game->player_vector.direction.y -= y1;
 	}
-	if (keycode == M_RIGHT)
+	if (game->pressed_keys.m_right)
 	{
 		x1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
 		y1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
@@ -103,6 +127,16 @@ int	keys_handler(int keycode, t_game *game)
 		game->player_vector.direction.x -= x1;
 		game->player_vector.direction.y += y1;
 	}
+}
+
+int	render(t_game *game)
+{
+	clear();
+	update_player_vector(game);
+	draw_blocks(game, game->minimap_block_d);
+	draw_player(*game, game->minimap_player_d);
+	draw_line(game->player_vector);
+	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
 
@@ -125,6 +159,7 @@ int	main(void)
 100001\
 100001\
 111111";
+printf("%s\n", game.map);
 // 	game.map = "\
 // 1111111111111111111111\
 // 1000000000000000000001\
@@ -157,7 +192,14 @@ int	main(void)
 		game.player_vector.direction.x -= DIRECTION_LEN;
 		game.player_view_angle = 180;
 	}
-	mlx_hook(game.win, 2, 0, &keys_handler, &game);
+	game.pressed_keys.r_right = FALSE;
+	game.pressed_keys.r_left = FALSE;
+	game.pressed_keys.m_right = FALSE;
+	game.pressed_keys.m_left = FALSE;
+	game.pressed_keys.m_forward = FALSE;
+	game.pressed_keys.m_backward = FALSE;
+	mlx_hook(game.win, 2, 0, &key_press_handler, &game.pressed_keys);
+	mlx_hook(game.win, 3, 0, &key_release_handler, &game.pressed_keys);
 	// mlx_key_hook(game.win, keys_handler, &game);
 	mlx_loop_hook(game.mlx, render, &game);
 	mlx_loop(game.mlx);

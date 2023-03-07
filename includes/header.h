@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 00:56:27 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 05:33:07 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,19 @@
 # define MINIMAP_PLAYER_SCALE .2
 # define DIRECTION_LEN 25
 # define PI 3.141592653589793
+
 # define R_RIGHT 124
 # define R_LEFT 123
 # define M_RIGHT 2
 # define M_LEFT 0
 # define M_FORWARD 13
 # define M_BACKWARD 1
+
 # define ROT_SPEED 5
-# define MVT_SPEED 5
+# define MVT_SPEED 3
 
 /* enums */
+typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
 typedef enum e_direction {
 	NORTH,
 	SOUTH,
@@ -65,19 +68,28 @@ typedef struct s_img_data {
 	int		line_length;
 	int		endian;
 }				t_img_data;
+typedef struct s_pressed_keys {
+	t_bool	r_right;
+	t_bool	r_left;
+	t_bool	m_right;
+	t_bool	m_left;
+	t_bool	m_forward;
+	t_bool	m_backward;
+}				t_pressed_keys;
 typedef struct s_game
 {
-	void		*mlx;
-	void		*win;
-	t_img_data	img;
-	char		*map;
-	int			map_height;
-	int			map_width;
-	int			minimap_block_d;
-	int			minimap_player_d;
-	t_direction	player_orientation;
-	t_vector	player_vector;
-	int			player_view_angle;
+	void			*mlx;
+	void			*win;
+	t_img_data		img;
+	char			*map;
+	int				map_height;
+	int				map_width;
+	int				minimap_block_d;
+	int				minimap_player_d;
+	t_pressed_keys	pressed_keys;
+	t_direction		player_orientation;
+	t_vector		player_vector;
+	int				player_view_angle;
 }					t_game;
 
 /* -> prototypes <- */
