@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/06 21:55:45 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 01:17:35 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	clear(void)
 
 int	render(t_game *game)
 {
+	mlx_hook(game.win, 2, 0, &keys_handler, &game);
 	clear();
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
@@ -48,29 +49,29 @@ int	render(t_game *game)
 
 int	keys_handler(int keycode, t_game *game)
 {
-	double		x1;
-	double		y1;
+	int		x1;
+	int		y1;
 
 	if (keycode == R_LEFT)
 	{
 		game->player_view_angle -= ROT_SPEED;
-		x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
-        y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
+		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
+        y1 = round(DIRECTION_LEN * sin(game->player_view_angle * PI / 180));
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
 	if (keycode == R_RIGHT)
 	{
 		game->player_view_angle += ROT_SPEED;
-		x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
-        y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
+		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
+        y1 = round(DIRECTION_LEN * sin(game->player_view_angle * PI / 180));
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
 	if (keycode == M_FORWARD)
 	{
-		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
-		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		x1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
+		y1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
 		game->player_vector.origin.x += x1;
 		game->player_vector.origin.y += y1;
 		game->player_vector.direction.x += x1;
@@ -78,8 +79,8 @@ int	keys_handler(int keycode, t_game *game)
 	}
 	if (keycode == M_BACKWARD)
 	{
-		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
-		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		x1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
+		y1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
 		game->player_vector.origin.x -= x1;
 		game->player_vector.origin.y -= y1;
 		game->player_vector.direction.x -= x1;
@@ -87,8 +88,8 @@ int	keys_handler(int keycode, t_game *game)
 	}
 	if (keycode == M_LEFT)
 	{
-		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
-		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		x1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
+		y1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
 		game->player_vector.origin.x += x1;
 		game->player_vector.origin.y -= y1;
 		game->player_vector.direction.x += x1;
@@ -96,8 +97,8 @@ int	keys_handler(int keycode, t_game *game)
 	}
 	if (keycode == M_RIGHT)
 	{
-		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
-		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		x1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
+		y1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
 		game->player_vector.origin.x -= x1;
 		game->player_vector.origin.y += y1;
 		game->player_vector.direction.x -= x1;
@@ -157,7 +158,7 @@ int	main(void)
 		game.player_vector.direction.x -= DIRECTION_LEN;
 		game.player_view_angle = 180;
 	}
-	mlx_hook(game.win, 2, 1L<<0, &keys_handler, &game);
+	mlx_hook(game.win, 2, 0, &keys_handler, &game);
 	// mlx_key_hook(game.win, keys_handler, &game);
 	mlx_loop_hook(game.mlx, render, &game);
 	mlx_loop(game.mlx);
