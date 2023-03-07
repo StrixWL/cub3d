@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/06 16:41:31 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 17:23:44 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ void	put_pixel(int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_line_with_x(t_vector line, float a, float b)
+void	draw_line_with_x(t_vector line, float a, float b, int color)
 {
 	int		y;
 
 	while (line.origin.x != line.direction.x)
 	{
 		y = a * line.origin.x + b;
-		put_pixel(line.origin.x, y, 0x00FF00);
+		put_pixel(line.origin.x, y, color);
 		if (line.origin.x < line.direction.x)
 			line.origin.x++;
 		else
@@ -39,14 +39,14 @@ void	draw_line_with_x(t_vector line, float a, float b)
 	}
 }
 
-void	draw_line_with_y(t_vector line, float a, float b)
+void	draw_line_with_y(t_vector line, float a, float b, int color)
 {
 	int		x;
 
 	while (line.origin.y != line.direction.y)
 	{
 		x = (line.origin.y - b) / a;
-		put_pixel(x, line.origin.y, 0x00FF00);
+		put_pixel(x, line.origin.y, color);
 		if (line.origin.y < line.direction.y)
 			line.origin.y++;
 		else
@@ -54,7 +54,7 @@ void	draw_line_with_y(t_vector line, float a, float b)
 	}
 }
 
-void	draw_line(t_vector line)
+void	draw_line(t_vector line, int color)
 {
 	int		delta_x;
 	int		delta_y;
@@ -70,15 +70,15 @@ void	draw_line(t_vector line)
 				line.origin.y++;
 			else
 				line.origin.y--;
-			put_pixel(line.origin.x, line.origin.y, 0x00FF00);
+			put_pixel(line.origin.x, line.origin.y, color);
 		}
 		return ;
 	}
 	delta_y = line.origin.y - line.direction.y;
 	a = (float)delta_y / (float)delta_x;
 	b = line.origin.y - a * line.origin.x;
-	draw_line_with_x(line, a, b);
-	draw_line_with_y(line, a, b);
+	draw_line_with_x(line, a, b, color);
+	draw_line_with_y(line, a, b, color);
 }
 
 void	draw_square(int x, int y, int d, int color)

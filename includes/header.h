@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 05:33:07 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 17:23:59 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@
 # include <string.h>
 # include <unistd.h>
 # include <math.h>
+# include <stdlib.h>
 
 # define SCREEN_HEIGHT 512
 # define SCREEN_WIDTH 1024
 # define MINIMAP_SCALE 1
 # define MINIMAP_PLAYER_SCALE .2
-# define DIRECTION_LEN 25
+# define DIRECTION_LEN 30
 # define PI 3.141592653589793
 
 # define R_RIGHT 124
@@ -101,7 +102,7 @@ void		put_pixel(int x, int y, int color);
 void		draw_square(int x, int y, int d, int color);
 void		draw_blocks(t_game *game, int d);
 void		draw_player(t_game game, int d);
-void		draw_line(t_vector line);
+void		draw_line(t_vector line, int color);
 
 /* objects */
 t_pos		new_pos(int x, int y);

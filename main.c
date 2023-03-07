@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 05:51:07 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 21:25:37 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	update_player_vector(t_game *game)
 	if (game->pressed_keys.r_left)
 	{
 		game->player_view_angle -= ROT_SPEED;
+		if (game->player_view_angle < 0)
+			game->player_view_angle = 360 - abs(game->player_view_angle);
 		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
         y1 = round(DIRECTION_LEN * sin(game->player_view_angle * PI / 180));
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
@@ -86,6 +88,8 @@ void	update_player_vector(t_game *game)
 	if (game->pressed_keys.r_right)
 	{
 		game->player_view_angle += ROT_SPEED;
+		if (game->player_view_angle >= 360)
+			game->player_view_angle = game->player_view_angle - 360;
 		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
         y1 = round(DIRECTION_LEN * sin(game->player_view_angle * PI / 180));
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
@@ -129,16 +133,99 @@ void	update_player_vector(t_game *game)
 	}
 }
 
+t_bool	is_wall(t_game *game, t_pos cord)
+{
+	t_pos	wall_pos;
+
+	wall_pos.x = cord.x / game->minimap_block_d;
+	wall_pos.y = cord.y / game->minimap_block_d;
+	if (game->map[wall_pos.x + wall_pos.y * game->map_width] == '1')
+		return (TRUE);
+	return (FALSE);
+}
+
+t_bool	get_v_intersection(t_game *game, t_pos *h_intersection)
+{
+	float	a;
+	float	b;
+	t_pos	delta;
+
+
+	if (game->player_view_angle == 0 || game->player_view_angle == 180)
+		return (FALSE);
+	else if (game->player_view_angle > 180) // looking up
+	{
+		h_intersection->y = floor(game->player_vector.origin.y / game->minimap_block_d) * game->minimap_block_d;
+		while (h_intersection->y > 0)
+		{
+			delta.x = game->player_vector.origin.x - game->player_vector.direction.x;
+			delta.y = game->player_vector.origin.y - game->player_vector.direction.y;
+			if (!delta.x)
+				h_intersection->x = game->player_vector.origin.x;
+			else
+			{
+				a = (float)delta.y / (float)delta.x;
+				b = game->player_vector.origin.y - a * game->player_vector.origin.x;
+				h_intersection->x = (h_intersection->y - b) / a;
+			}
+			if (!is_wall(game, new_pos(h_intersection->x, h_intersection->y - game->minimap_block_d)))
+				h_intersection->y -= game->minimap_block_d;
+			else
+			{
+				draw_line(new_vector(game->player_vector.origin, *h_intersection), 0xFFFF00);
+				break ;
+			}
+		}
+	}
+	else
+	{
+		h_intersection->y = (floor(game->player_vector.origin.y / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
+		while (h_intersection->y < SCREEN_HEIGHT)
+		{
+			delta.x = game->player_vector.origin.x - game->player_vector.direction.x;
+			delta.y = game->player_vector.origin.y - game->player_vector.direction.y;
+			if (!delta.x)
+				h_intersection->x = game->player_vector.origin.x;
+			else
+			{
+				a = (float)delta.y / (float)delta.x;
+				b = game->player_vector.origin.y - a * game->player_vector.origin.x;
+				h_intersection->x = (h_intersection->y - b) / a;
+			}
+			if (!is_wall(game, *h_intersection))
+				h_intersection->y += game->minimap_block_d;
+			else
+				break ;
+		}
+	}
+	return (TRUE);
+}
+
+void	cast_ray(t_vector ray, t_game *game)
+{
+	t_pos	h_intersection;
+	t_pos	v_intersection;
+
+
+	if (get_v_intersection(game, &h_intersection) && h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
+		draw_line(new_vector(game->player_vector.origin, h_intersection), 0xFFFF00);
+}
+
 int	render(t_game *game)
 {
 	clear();
 	update_player_vector(game);
 	draw_blocks(game, game->minimap_block_d);
+	// draw_line(game->player_vector, 0x00FF00);
 	draw_player(*game, game->minimap_player_d);
-	draw_line(game->player_vector);
+	cast_ray(game->player_vector, game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
+
+// block_d = 100;
+// y = 233
+// new_y = y / block_d * block_d
 
 int	main(void)
 {
@@ -157,9 +244,9 @@ int	main(void)
 100011\
 100001\
 100001\
-100001\
+101001\
 111111";
-printf("%s\n", game.map);
+printf("%d\n", getpid());
 // 	game.map = "\
 // 1111111111111111111111\
 // 1000000000000000000001\
@@ -168,6 +255,9 @@ printf("%s\n", game.map);
 	/* graphics */
 	game.mlx = mlx_init();
 	game.win = mlx_new_window(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");
+	mlx_hook(game.win, 2, 0, &key_press_handler, &game.pressed_keys);
+	mlx_hook(game.win, 3, 0, &key_release_handler, &game.pressed_keys);
+	mlx_loop_hook(game.mlx, render, &game);
 	game.img.img = mlx_new_image(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel,
 					&game.img.line_length, &game.img.endian);
@@ -188,19 +278,20 @@ printf("%s\n", game.map);
 	else if (game.player_orientation == EAST)
 		game.player_vector.direction.x += DIRECTION_LEN;
 	else if (game.player_orientation == WEST)
-	{
 		game.player_vector.direction.x -= DIRECTION_LEN;
+	if (game.player_orientation == NORTH)
+		game.player_view_angle = 270;
+	else if (game.player_orientation == SOUTH)
+		game.player_view_angle = 90;
+	else if (game.player_orientation == EAST)
+		game.player_view_angle = 0;
+	else if (game.player_orientation == WEST)
 		game.player_view_angle = 180;
-	}
 	game.pressed_keys.r_right = FALSE;
 	game.pressed_keys.r_left = FALSE;
 	game.pressed_keys.m_right = FALSE;
 	game.pressed_keys.m_left = FALSE;
 	game.pressed_keys.m_forward = FALSE;
 	game.pressed_keys.m_backward = FALSE;
-	mlx_hook(game.win, 2, 0, &key_press_handler, &game.pressed_keys);
-	mlx_hook(game.win, 3, 0, &key_release_handler, &game.pressed_keys);
-	// mlx_key_hook(game.win, keys_handler, &game);
-	mlx_loop_hook(game.mlx, render, &game);
 	mlx_loop(game.mlx);
 }
