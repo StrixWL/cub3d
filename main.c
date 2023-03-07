@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 01:17:35 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/07 01:20:34 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	clear(void)
 
 int	render(t_game *game)
 {
-	mlx_hook(game.win, 2, 0, &keys_handler, &game);
 	clear();
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
