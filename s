@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/08 10:52:02 by bel-amri         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    s                                                  :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#              #
+#    Updated: 2023/03/08 02:50:46 by bel-amri         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
 #include <header.h>
 
@@ -139,7 +139,6 @@ t_bool	is_wall(t_game *game, t_pos cord)
 
 	wall_pos.x = cord.x / game->minimap_block_d;
 	wall_pos.y = cord.y / game->minimap_block_d;
-	// printf("%d, %d\n", wall_pos.x, wall_pos.y);
 	if (game->map[wall_pos.x + wall_pos.y * game->map_width] == '1')
 		return (TRUE);
 	return (FALSE);
@@ -210,20 +209,17 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, int angle, t_vect
 		return (FALSE);
 	else if (angle > 90 && angle < 270) // looking left
 	{
-		h_intersection->x = floor(ray.origin.x / game->minimap_block_d) * game->minimap_block_d;
+		h_intersection->x = floor(game->player_vector.origin.x / game->minimap_block_d) * game->minimap_block_d;
 		while (h_intersection->x > 0)
 		{
-			delta.x = ray.origin.x - ray.direction.x;
-			delta.y = ray.origin.y - ray.direction.y;
+			delta.x = game->player_vector.origin.x - game->player_vector.direction.x;
+			delta.y = game->player_vector.origin.y - game->player_vector.direction.y;
 			if (!delta.x)
-				h_intersection->x = ray.origin.x;
+				h_intersection->x = game->player_vector.origin.x;
 			else
 			{
-				if (!delta.y)
-					a = 0;
-				else
-					a = (float)delta.y / (float)delta.x;
-				b = ray.origin.y - a * ray.origin.x;
+				a = (float)delta.y / (float)delta.x;
+				b = game->player_vector.origin.y - a * game->player_vector.origin.x;
 				h_intersection->y = a * h_intersection->x + b;
 			}
 			if (!is_wall(game, new_pos(h_intersection->x - game->minimap_block_d, h_intersection->y)))
@@ -234,22 +230,18 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, int angle, t_vect
 	}
 	else
 	{
-		h_intersection->x = (floor(ray.origin.x / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
+		h_intersection->x = (floor(game->player_vector.origin.x / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
 		while (h_intersection->x < SCREEN_WIDTH)
 		{
-			delta.x = ray.origin.x - ray.direction.x;
-			delta.y = ray.origin.y - ray.direction.y;
+			delta.x = game->player_vector.origin.x - game->player_vector.direction.x;
+			delta.y = game->player_vector.origin.y - game->player_vector.direction.y;
 			if (!delta.x)
-				h_intersection->x = ray.origin.x;
+				h_intersection->x = game->player_vector.origin.x;
 			else
 			{
-				if (!delta.y)
-					a = 0;
-				else
-					a = (float)delta.y / (float)delta.x;
-				b = ray.origin.y - a * ray.origin.x;
+				a = (float)delta.y / (float)delta.x;
+				b = game->player_vector.origin.y - a * game->player_vector.origin.x;
 				h_intersection->y = a * h_intersection->x + b;
-				printf("a: %f, b: %f, x: %d, y: %d\n", a, b, h_intersection->x, h_intersection->y);
 			}
 			if (!is_wall(game, *h_intersection))
 				h_intersection->x += game->minimap_block_d;
@@ -275,74 +267,51 @@ void	cast_ray(t_vector ray, t_game *game, int angle)
 	int		h_code;
 	int		v_code;
 
-	// h_code = get_h_intersection(game, &h_intersection, angle, ray) && h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT;
+	h_code = get_h_intersection(game, &h_intersection, angle, ray) && h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT;
 	v_code = get_v_intersection(game, &v_intersection, angle, ray) && v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH;
-	if (v_code && v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
+	if (!h_code && v_code)
 		draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
-	// if (!h_code && v_code)
-	// {
-	// 	if (v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
-	// 	{
-	// 		printf("%d, %d\n", v_intersection.x, v_intersection.y);
-	// 		draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
-	// 	}
-	// }
-	// else if (!v_code && h_code)
-	// {
-	// 	if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
-	// 	{
-	// 		printf("%d, %d\n", h_intersection.x, h_intersection.y);
-	// 		draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
-	// 	}
-	// }
-	// else
-	// {
-	// 	if (get_distance(ray.origin, v_intersection) < get_distance(ray.origin, h_intersection))
-	// 	{
-	// 		if (v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
-	// 		{
-	// 			printf("%d, %d\n", v_intersection.x, v_intersection.y);
-	// 			draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
-	// 		{
-	// 			printf("%d, %d\n", h_intersection.x, h_intersection.y);
-	// 			draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
-	// 		}
-	// 	}
-	// }
+	else if (!v_code && h_code)
+		draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
+	else
+	{
+		if (get_distance(ray.origin, v_intersection) < get_distance(ray.origin, h_intersection))
+		{
+			if (v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
+				draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
+		}
+		else
+		{
+			if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
+				draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
+		}
+	}
 }
 
 int	render(t_game *game)
 {
 	int		angle;
-	int		max_angle;
 	int		x1;
 	int		y1;
-	int		i;
 
 	clear();
 	update_player_vector(game);
+	angle = game->player_view_angle + 30;
+	int xd = game->player_view_angle - 30;
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
-
-	i = 0;
-	angle = game->player_view_angle - VIEW_RANGE / 2;
-	// while (i < VIEW_RANGE)
+	// while (angle > xd)
 	// {
 	// 	if (angle >= 360)
 	// 		angle = angle - 360;
-	// 	x1 = round(DIRECTION_LEN * cos((angle) * PI / 180));
-	// 	y1 = round(DIRECTION_LEN * sin((angle) * PI / 180));
-	// 	// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.direction.x + x1, game->player_vector.direction.y + y1)), 0xA020F0);
-	// 	cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.direction.x + x1, game->player_vector.direction.y + y1)), game, angle);
-	// 	angle++;
-	// 	i++;
+	// 	x1 = round(DIRECTION_LEN * cos(angle * PI / 180));
+    //     y1 = round(DIRECTION_LEN * sin(angle * PI / 180));
+	// 	cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game);
+	// 	angle--;
 	// }
 	cast_ray(game->player_vector, game, game->player_view_angle);
+	// cast_ray(game);
+	// draw_line(new_vector(new_pos(150, 250), new_pos(200, 200)), 0xA020F0);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
@@ -360,7 +329,7 @@ int	main(void)
 	game.map_width = 6; // 6, 22
 	game.player_vector.origin.x = 4; // player x position
 	game.player_vector.origin.y = 4; // player y position
-	game.player_orientation = WEST; // looking left
+	game.player_orientation = WEST;
 	game.map = "\
 111111\
 101011\
