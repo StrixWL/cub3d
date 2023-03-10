@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/10 01:53:33 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/10 02:10:30 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	t_pos	delta;
 
 
-	if (ray.origin.y == ray.direction.y)
+	if (ray.origin.y == ray.direction.y) // parallel with x axes
 		return (FALSE);
 	else if (ray.origin.y > ray.direction.y) // looking up
 	{
@@ -250,7 +250,7 @@ int		get_distance(t_pos p1, t_pos p2)
 	return (d);
 }
 
-void	cast_ray(t_vector ray, t_game *game, int angle)
+int	cast_ray(t_vector ray, t_game *game, int angle)
 {
 	t_pos	h_intersection;
 	t_pos	v_intersection;
@@ -259,17 +259,17 @@ void	cast_ray(t_vector ray, t_game *game, int angle)
 
 	h_code = get_h_intersection(game, &h_intersection, ray);
 	v_code = get_v_intersection(game, &v_intersection, ray);
-	// if (v_code && v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
-	// 	draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
 	if (!h_code && v_code)
 	{
 		if (v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
 			draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
+		return (get_distance(ray.origin, v_intersection));
 	}
 	else if (!v_code && h_code)
 	{
 		if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
 			draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
+		return (get_distance(ray.origin, h_intersection));
 	}
 	else
 	{
@@ -277,13 +277,16 @@ void	cast_ray(t_vector ray, t_game *game, int angle)
 		{
 			if (v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
 				draw_line(new_vector(ray.origin, v_intersection), 0xA020F0);
+			return (get_distance(ray.origin, v_intersection));
 		}
 		else
 		{
 			if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
 				draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
+			return (get_distance(ray.origin, h_intersection));
 		}
 	}
+	return (-1);
 }
 
 int	render(t_game *game)
@@ -298,7 +301,6 @@ int	render(t_game *game)
 	update_player_vector(game);
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
-
 	i = 0;
 	angle = game->player_view_angle - VIEW_RANGE / 2;
 	while (i < VIEW_RANGE)
@@ -307,8 +309,9 @@ int	render(t_game *game)
 			angle = angle - 360;
 		x1 = round(DIRECTION_LEN * cos((angle) * PI / 180));
 		y1 = round(DIRECTION_LEN * sin((angle) * PI / 180));
-		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.direction.x + x1, game->player_vector.direction.y + y1)), 0xA020F0);
-		cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.direction.x + x1, game->player_vector.direction.y + y1)), game, angle);
+		// YOU GET RAYS DISTANCES HERE ↓↓↓↓↓
+		printf("%d\n", cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.direction.x + x1, game->player_vector.direction.y + y1)), game, angle));
+		// YOU GET RAYS DISTANCES HERE ↑↑↑↑↑
 		angle++;
 		i++;
 	}
@@ -316,10 +319,6 @@ int	render(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
-
-// block_d = 100;
-// y = 233
-// new_y = y / block_d * block_d
 
 int	main(void)
 {
