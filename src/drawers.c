@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 17:23:44 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/10 01:35:32 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	draw_line(t_vector line, int color)
 	float	a;
 	float	b;
 
+	if (line.origin.x < 0 || line.origin.y < 0 || line.direction.x < 0 || line.direction.y < 0 || line.origin.x > SCREEN_WIDTH || line.origin.y > SCREEN_HEIGHT || line.direction.x > SCREEN_WIDTH || line.direction.y > SCREEN_WIDTH)
+		return ;
 	delta_x = line.origin.x - line.direction.x;
 	if (!delta_x)
 	{

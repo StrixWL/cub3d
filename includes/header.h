@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/08 09:34:05 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/10 00:57:54 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define MINIMAP_PLAYER_SCALE .2
 # define DIRECTION_LEN 30
 # define PI 3.141592653589793
+# define GAP 5
 
 # define R_RIGHT 124
 # define R_LEFT 123
