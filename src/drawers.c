@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/10 02:07:29 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/11 22:55:31 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	put_pixel(int x, int y, int color)
 	t_img_data	*data;
 	char		*dst;
 
+	if (x < 0 || y < 0 || x > SCREEN_WIDTH - 1 || y > SCREEN_HEIGHT - 1)
+		return ;
 	x *= MINIMAP_SCALE;
 	y *= MINIMAP_SCALE;
 	data = img_save(NULL);
@@ -26,9 +28,9 @@ void	put_pixel(int x, int y, int color)
 
 void	draw_line_with_x(t_vector line, float a, float b, int color)
 {
-	int		y;
+	float		y;
 
-	while (line.origin.x != line.direction.x)
+	while (floor(line.origin.x) != floor(line.direction.x))
 	{
 		y = a * line.origin.x + b;
 		put_pixel(line.origin.x, y, color);
@@ -41,9 +43,9 @@ void	draw_line_with_x(t_vector line, float a, float b, int color)
 
 void	draw_line_with_y(t_vector line, float a, float b, int color)
 {
-	int		x;
+	float		x;
 
-	while (line.origin.y != line.direction.y)
+	while (floor(line.origin.y) != floor(line.direction.y))
 	{
 		x = (line.origin.y - b) / a;
 		put_pixel(x, line.origin.y, color);
@@ -61,12 +63,10 @@ void	draw_line(t_vector line, int color)
 	float	a;
 	float	b;
 
-	if (line.origin.x < 0 || line.origin.y < 0 || line.direction.x < 0 || line.direction.y < 0 || line.origin.x > SCREEN_WIDTH || line.origin.y > SCREEN_HEIGHT || line.direction.x > SCREEN_WIDTH || line.direction.y > SCREEN_WIDTH)
-		return ;
 	delta_x = line.origin.x - line.direction.x;
 	if (!delta_x)
 	{
-		while (line.origin.y != line.direction.y)
+		while (floor(line.origin.y) != floor(line.direction.y))
 		{
 			if (line.origin.y < line.direction.y)
 				line.origin.y++;

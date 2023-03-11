@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/10 02:10:30 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/11 23:36:56 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,16 @@ int	key_release_handler(int keycode, t_pressed_keys *pressed_keys)
 
 void	update_player_vector(t_game *game)
 {
-	int		x1;
-	int		y1;
+	float		x1;
+	float		y1;
 
 	if (game->pressed_keys.r_left)
 	{
 		game->player_view_angle -= ROT_SPEED;
 		if (game->player_view_angle < 0)
 			game->player_view_angle = 360 - abs(game->player_view_angle);
-		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
-        y1 = round(DIRECTION_LEN * sin(game->player_view_angle * PI / 180));
+		x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
+        y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
@@ -90,15 +90,15 @@ void	update_player_vector(t_game *game)
 		game->player_view_angle += ROT_SPEED;
 		if (game->player_view_angle >= 360)
 			game->player_view_angle = game->player_view_angle - 360;
-		x1 = round(DIRECTION_LEN * cos(game->player_view_angle * PI / 180));
-        y1 = round(DIRECTION_LEN * sin(game->player_view_angle * PI / 180));
+		x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
+        y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
 		game->player_vector.direction.x = game->player_vector.origin.x + x1;
 		game->player_vector.direction.y = game->player_vector.origin.y + y1;
 	}
 	if (game->pressed_keys.m_forward)
 	{
-		x1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
-		y1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
+		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
 		game->player_vector.origin.x += x1;
 		game->player_vector.origin.y += y1;
 		game->player_vector.direction.x += x1;
@@ -106,8 +106,8 @@ void	update_player_vector(t_game *game)
 	}
 	if (game->pressed_keys.m_backward)
 	{
-		x1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
-		y1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
+		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
 		game->player_vector.origin.x -= x1;
 		game->player_vector.origin.y -= y1;
 		game->player_vector.direction.x -= x1;
@@ -115,8 +115,8 @@ void	update_player_vector(t_game *game)
 	}
 	if (game->pressed_keys.m_left)
 	{
-		x1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
-		y1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
+		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
 		game->player_vector.origin.x += x1;
 		game->player_vector.origin.y -= y1;
 		game->player_vector.direction.x += x1;
@@ -124,8 +124,8 @@ void	update_player_vector(t_game *game)
 	}
 	if (game->pressed_keys.m_right)
 	{
-		x1 = round(MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180));
-		y1 = round(MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180));
+		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
+		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
 		game->player_vector.origin.x -= x1;
 		game->player_vector.origin.y += y1;
 		game->player_vector.direction.x -= x1;
@@ -139,7 +139,7 @@ t_bool	is_wall(t_game *game, t_pos cord)
 
 	wall_pos.x = cord.x / game->minimap_block_d;
 	wall_pos.y = cord.y / game->minimap_block_d;
-	if (game->map[wall_pos.x + wall_pos.y * game->map_width] == '1')
+	if (game->map[(int)(wall_pos.x + wall_pos.y * game->map_width)] == '1')
 		return (TRUE);
 	return (FALSE);
 }
@@ -151,7 +151,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	t_pos	delta;
 
 
-	if (ray.origin.y == ray.direction.y) // parallel with x axes
+	if (fabsf(ray.origin.y - ray.direction.y) < 15) // parallel with x axes
 		return (FALSE);
 	else if (ray.origin.y > ray.direction.y) // looking up
 	{
@@ -177,7 +177,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	else
 	{
 		h_intersection->y = (floor(ray.origin.y / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
-		while (h_intersection->y < SCREEN_HEIGHT)
+		while (h_intersection->y < SCREEN_HEIGHT - 1)
 		{
 			delta.x = ray.origin.x - ray.direction.x;
 			delta.y = ray.origin.y - ray.direction.y;
@@ -195,7 +195,9 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 				break ;
 		}
 	}
-	return (TRUE);
+	if (h_intersection->y > 0 && h_intersection->y < SCREEN_HEIGHT)
+		return (TRUE);
+	return (FALSE);
 }
 
 t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
@@ -205,7 +207,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	t_pos	delta;
 
 
-	if (ray.origin.x == ray.direction.x) // parallel with y axes
+	if (fabsf(ray.origin.x - ray.direction.x) < 20) // parallel with y axes
 		return (FALSE);
 	else if (ray.origin.x > ray.direction.x) // looking left
 	{
@@ -244,7 +246,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 
 int		get_distance(t_pos p1, t_pos p2)
 {
-	int		d;
+	float		d;
 
 	d = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
 	return (d);
@@ -258,7 +260,9 @@ int	cast_ray(t_vector ray, t_game *game, int angle)
 	int		v_code;
 
 	h_code = get_h_intersection(game, &h_intersection, ray);
-	v_code = get_v_intersection(game, &v_intersection, ray);
+	// h_code = 0;
+	// v_code = get_v_intersection(game, &v_intersection, ray);
+	v_code = 0;
 	if (!h_code && v_code)
 	{
 		if (v_intersection.x > 0 && v_intersection.x < SCREEN_WIDTH)
@@ -267,11 +271,11 @@ int	cast_ray(t_vector ray, t_game *game, int angle)
 	}
 	else if (!v_code && h_code)
 	{
-		if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
+		// if (h_intersection.y > 0 && h_intersection.y < SCREEN_HEIGHT)
 			draw_line(new_vector(ray.origin, h_intersection), 0xA020F0);
 		return (get_distance(ray.origin, h_intersection));
 	}
-	else
+	else if (h_code && v_code)
 	{
 		if (get_distance(ray.origin, v_intersection) < get_distance(ray.origin, h_intersection))
 		{
@@ -286,16 +290,16 @@ int	cast_ray(t_vector ray, t_game *game, int angle)
 			return (get_distance(ray.origin, h_intersection));
 		}
 	}
-	return (-1);
+	printf("hh\n");
+	return (0);
 }
 
 int	render(t_game *game)
 {
-	int		angle;
-	int		max_angle;
-	int		x1;
-	int		y1;
-	int		i;
+	float			angle;
+	float		x1;
+	float		y1;
+	float			i;
 
 	clear();
 	update_player_vector(game);
@@ -307,15 +311,17 @@ int	render(t_game *game)
 	{
 		if (angle >= 360)
 			angle = angle - 360;
-		x1 = round(DIRECTION_LEN * cos((angle) * PI / 180));
-		y1 = round(DIRECTION_LEN * sin((angle) * PI / 180));
+		x1 = DIRECTION_LEN * cos((angle) * PI / 180);
+		y1 = DIRECTION_LEN * sin((angle) * PI / 180);
 		// YOU GET RAYS DISTANCES HERE ↓↓↓↓↓
+		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), 0xFFFFFF);
 		printf("%d\n", cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.direction.x + x1, game->player_vector.direction.y + y1)), game, angle));
 		// YOU GET RAYS DISTANCES HERE ↑↑↑↑↑
-		angle++;
-		i++;
+		angle += 1;
+		i += 1;
 	}
-	cast_ray(game->player_vector, game, game->player_view_angle);
+	// cast_ray(game->player_vector, game, game->player_view_angle);
+	// draw_line(game->player_vector, 0xFFFFFF);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
@@ -325,11 +331,17 @@ int	main(void)
 	t_game	game;
 
 	/* parsing */
-	game.map_height = 8; // 8, 4
-	game.map_width = 6; // 6, 22
+	game.map_height = 18; // 18, 8
+	game.map_width = 220; // 220, 6
 	game.player_vector.origin.x = 4; // player x position
 	game.player_vector.origin.y = 4; // player y position
-	game.player_orientation = NORTH; // looking left
+	game.player_orientation = SOUTH;
+	/* 7it 3arfek 7mar
+		NORTH: LFO9
+		SOUTH: LTE7T
+		WEST: LISER
+		EAST: LIMEN
+	*/
 	game.map = "\
 111111\
 101011\
@@ -340,11 +352,25 @@ int	main(void)
 101001\
 111111";
 printf("%d\n", getpid());
-// 	game.map = "\
-// 1111111111111111111111\
-// 1000000000000000000001\
-// 1000000000000000000001\
-// 1111111111111111111111";
+	game.map = "\
+1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
 	/* graphics */
 	game.mlx = mlx_init();
 	game.win = mlx_new_window(game.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");

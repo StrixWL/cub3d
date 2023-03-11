@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/10 02:09:38 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/11 22:52:10 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define SCREEN_WIDTH 1024
 # define MINIMAP_SCALE 1
 # define MINIMAP_PLAYER_SCALE .2
-# define DIRECTION_LEN 30
+# define DIRECTION_LEN 300
 # define PI 3.141592653589793
 # define GAP 5
 
@@ -36,7 +36,7 @@
 
 # define ROT_SPEED 5
 # define MVT_SPEED 3
-# define VIEW_RANGE 30
+# define VIEW_RANGE 60
 
 /* enums */
 typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
@@ -56,8 +56,8 @@ typedef enum e_direction {
 /* -> structs <- */
 typedef struct s_pos
 {
-	int		x;
-	int		y;
+	float		x;
+	float		y;
 }					t_pos;
 typedef struct s_vector
 {
