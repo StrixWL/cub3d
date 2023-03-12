@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/11 23:36:56 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/12 10:35:47 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,21 @@ void	update_player_vector(t_game *game)
 {
 	float		x1;
 	float		y1;
+	int			x_gap;
+	int			y_gap;
+	int			gap;
 
+	gap = 12;
+	x_gap = 0;
+	y_gap = 0;
+	if (game->player_view_angle > 0 && game->player_view_angle < 180) // looking down
+		y_gap = -gap;
+	if (game->player_view_angle > 180 && game->player_view_angle < 360) // looking up
+		y_gap = gap;
+	if (game->player_view_angle > 90 && game->player_view_angle < 270) // looking left
+		x_gap = gap;
+	else // looking right
+		x_gap = -gap;
 	if (game->pressed_keys.r_left)
 	{
 		game->player_view_angle -= ROT_SPEED;
@@ -113,39 +127,62 @@ void	update_player_vector(t_game *game)
 	{
 		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
-		if (is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)))
-			return ;
-		game->player_vector.origin.x += x1;
-		game->player_vector.origin.y += y1;
-		game->player_vector.direction.x += x1;
-		game->player_vector.direction.y += y1;
+		if (!is_wall(game, new_pos(game->player_vector.origin.x, game->player_vector.origin.y + y1)))
+		{
+			game->player_vector.origin.y += y1;
+			game->player_vector.direction.y += y1;
+		}
+		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y)))
+		{
+			game->player_vector.origin.x += x1;
+			game->player_vector.direction.x += x1;
+		}
 	}
 	if (game->pressed_keys.m_backward)
 	{
 		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
-		game->player_vector.origin.x -= x1;
-		game->player_vector.origin.y -= y1;
-		game->player_vector.direction.x -= x1;
-		game->player_vector.direction.y -= y1;
+		if (!is_wall(game, new_pos(game->player_vector.origin.x + x_gap, game->player_vector.origin.y + y1 + y_gap)))
+		{
+			game->player_vector.origin.x -= x1;
+			game->player_vector.direction.x -= x1;
+
+		}
+		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1 + x_gap, game->player_vector.origin.y + y_gap)))
+		{
+			game->player_vector.origin.y -= y1;
+			game->player_vector.direction.y -= y1;
+		}
 	}
 	if (game->pressed_keys.m_left)
 	{
 		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
-		game->player_vector.origin.x += x1;
-		game->player_vector.origin.y -= y1;
-		game->player_vector.direction.x += x1;
-		game->player_vector.direction.y -= y1;
+		if (!is_wall(game, new_pos(game->player_vector.origin.x , game->player_vector.origin.y + y1)))
+		{
+			game->player_vector.origin.x += x1;
+			game->player_vector.direction.x += x1;
+		}
+		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y)))
+		{
+			game->player_vector.origin.y -= y1;
+			game->player_vector.direction.y -= y1;
+		}
 	}
 	if (game->pressed_keys.m_right)
 	{
 		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
-		game->player_vector.origin.x -= x1;
-		game->player_vector.origin.y += y1;
-		game->player_vector.direction.x -= x1;
-		game->player_vector.direction.y += y1;
+		if (!is_wall(game, new_pos(game->player_vector.origin.x , game->player_vector.origin.y + y1)))
+		{
+			game->player_vector.origin.x -= x1;
+			game->player_vector.direction.x -= x1;
+		}
+		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y)))
+		{
+			game->player_vector.origin.y += y1;
+			game->player_vector.direction.y += y1;
+		}
 	}
 }
 
@@ -356,7 +393,7 @@ printf("%d\n", getpid());
 111111111111111111\
 100000000000000001\
 100000000000000001\
-100000000000000001\
+100000000000100001\
 100000000001000001\
 100000000000000001\
 100000000000000001\

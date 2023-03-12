@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/11 22:52:10 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/12 03:51:33 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 
 # define ROT_SPEED 5
 # define MVT_SPEED 6
-# define VIEW_RANGE 360
+# define VIEW_RANGE 60
 
 /* enums */
 typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
