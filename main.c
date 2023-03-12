@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/12 10:35:47 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/12 11:55:35 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,21 +88,7 @@ void	update_player_vector(t_game *game)
 {
 	float		x1;
 	float		y1;
-	int			x_gap;
-	int			y_gap;
-	int			gap;
 
-	gap = 12;
-	x_gap = 0;
-	y_gap = 0;
-	if (game->player_view_angle > 0 && game->player_view_angle < 180) // looking down
-		y_gap = -gap;
-	if (game->player_view_angle > 180 && game->player_view_angle < 360) // looking up
-		y_gap = gap;
-	if (game->player_view_angle > 90 && game->player_view_angle < 270) // looking left
-		x_gap = gap;
-	else // looking right
-		x_gap = -gap;
 	if (game->pressed_keys.r_left)
 	{
 		game->player_view_angle -= ROT_SPEED;
@@ -142,13 +128,13 @@ void	update_player_vector(t_game *game)
 	{
 		x1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
-		if (!is_wall(game, new_pos(game->player_vector.origin.x + x_gap, game->player_vector.origin.y + y1 + y_gap)))
+		if (!is_wall(game, new_pos(game->player_vector.origin.x - x1, game->player_vector.origin.y)))
 		{
 			game->player_vector.origin.x -= x1;
 			game->player_vector.direction.x -= x1;
 
 		}
-		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1 + x_gap, game->player_vector.origin.y + y_gap)))
+		if (!is_wall(game, new_pos(game->player_vector.origin.x, game->player_vector.origin.y - y1)))
 		{
 			game->player_vector.origin.y -= y1;
 			game->player_vector.direction.y -= y1;
@@ -158,12 +144,12 @@ void	update_player_vector(t_game *game)
 	{
 		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
-		if (!is_wall(game, new_pos(game->player_vector.origin.x , game->player_vector.origin.y + y1)))
+		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y)))
 		{
 			game->player_vector.origin.x += x1;
 			game->player_vector.direction.x += x1;
 		}
-		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y)))
+		if (!is_wall(game, new_pos(game->player_vector.origin.x, game->player_vector.origin.y - y1)))
 		{
 			game->player_vector.origin.y -= y1;
 			game->player_vector.direction.y -= y1;
@@ -173,12 +159,12 @@ void	update_player_vector(t_game *game)
 	{
 		x1 = MVT_SPEED * cos((90 - game->player_view_angle) * PI / 180);
 		y1 = MVT_SPEED * sin((90 - game->player_view_angle) * PI / 180);
-		if (!is_wall(game, new_pos(game->player_vector.origin.x , game->player_vector.origin.y + y1)))
+		if (!is_wall(game, new_pos(game->player_vector.origin.x - x1, game->player_vector.origin.y)))
 		{
 			game->player_vector.origin.x -= x1;
 			game->player_vector.direction.x -= x1;
 		}
-		if (!is_wall(game, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y)))
+		if (!is_wall(game, new_pos(game->player_vector.origin.x, game->player_vector.origin.y + y1)))
 		{
 			game->player_vector.origin.y += y1;
 			game->player_vector.direction.y += y1;
@@ -296,48 +282,54 @@ int		get_distance(t_pos p1, t_pos p2)
 	return (d);
 }
 
-int	cast_ray(t_vector ray, t_game *game, int color)
+int	*cast_ray(t_vector ray, t_game *game, int color)
 {
 	t_pos	h_intersection;
 	t_pos	v_intersection;
+	int		*data;
 	int		h_code;
 	int		v_code;
 
+	data = malloc(2 * sizeof(int));
 	h_code = get_h_intersection(game, &h_intersection, ray);
 	v_code = get_v_intersection(game, &v_intersection, ray);
 	if (!h_code && v_code)
 	{
 		draw_line(new_vector(ray.origin, v_intersection), color);
-		return (get_distance(ray.origin, v_intersection));
+		*data = (get_distance(ray.origin, v_intersection));
+		*(data + 1) = 'V';
 	}
 	else if (!v_code && h_code)
 	{
 		draw_line(new_vector(ray.origin, h_intersection), color);
-		return (get_distance(ray.origin, h_intersection));
+		*data = (get_distance(ray.origin, h_intersection));
+		*(data + 1) = 'H';
 	}
 	else if (h_code && v_code)
 	{
 		if (get_distance(ray.origin, v_intersection) < get_distance(ray.origin, h_intersection))
 		{
 			draw_line(new_vector(ray.origin, v_intersection), color);
-			return (get_distance(ray.origin, v_intersection));
+			*data = (get_distance(ray.origin, v_intersection));
+			*(data + 1) = 'V';
 		}
 		else
 		{
 			draw_line(new_vector(ray.origin, h_intersection), color);
-			return (get_distance(ray.origin, h_intersection));
+			*data = (get_distance(ray.origin, h_intersection));
+			*(data + 1) = 'H';
 		}
 	}
-	return (0);
+	return data;
 }
 
 int	render(t_game *game)
 {
 	float			angle;
-	float		x1;
-	float		y1;
+	float			x1;
+	float			y1;
 	float			i;
-
+	int				*data;
 	clear();
 	update_player_vector(game);
 	draw_blocks(game, game->minimap_block_d);
@@ -351,8 +343,8 @@ int	render(t_game *game)
 		y1 = DIRECTION_LEN * sin((angle) * PI / 180);
 		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), 0xFFFFFF);
 		// YOU GET RAYS DISTANCES HERE ↓↓↓↓↓
-		cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game, 0xFFFFFF);
-		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), 0xFFFFFF);
+		data = cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game, 0xFFFFFF);
+		printf("%d-> %c\n", *data, *(data + 1));
 		// YOU GET RAYS DISTANCES HERE ↑↑↑↑↑
 		angle += .1;
 		i += .1;
