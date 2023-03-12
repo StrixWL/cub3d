@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/12 11:55:35 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/12 20:56:38 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	clear(void)
 	{
 		y = 0;
 		while (y < SCREEN_HEIGHT)
-			put_pixel(x, y++, 0);
+			put_pixel2(x, y++, 0);
 		x++;
 	}
 }
@@ -274,7 +274,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	return (FALSE);
 }
 
-int		get_distance(t_pos p1, t_pos p2)
+float		get_distance(t_pos p1, t_pos p2)
 {
 	float		d;
 
@@ -282,11 +282,11 @@ int		get_distance(t_pos p1, t_pos p2)
 	return (d);
 }
 
-int	*cast_ray(t_vector ray, t_game *game, int color)
+float	*cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 {
 	t_pos	h_intersection;
 	t_pos	v_intersection;
-	int		*data;
+	float		*data;
 	int		h_code;
 	int		v_code;
 
@@ -295,27 +295,31 @@ int	*cast_ray(t_vector ray, t_game *game, int color)
 	v_code = get_v_intersection(game, &v_intersection, ray);
 	if (!h_code && v_code)
 	{
-		draw_line(new_vector(ray.origin, v_intersection), color);
+		if (draw)
+			draw_line(new_vector(ray.origin, v_intersection), color);
 		*data = (get_distance(ray.origin, v_intersection));
 		*(data + 1) = 'V';
 	}
 	else if (!v_code && h_code)
 	{
-		draw_line(new_vector(ray.origin, h_intersection), color);
+		if (draw)
+			draw_line(new_vector(ray.origin, h_intersection), color);
 		*data = (get_distance(ray.origin, h_intersection));
 		*(data + 1) = 'H';
 	}
-	else if (h_code && v_code)
+	else
 	{
 		if (get_distance(ray.origin, v_intersection) < get_distance(ray.origin, h_intersection))
 		{
-			draw_line(new_vector(ray.origin, v_intersection), color);
+			if (draw)
+				draw_line(new_vector(ray.origin, v_intersection), color);
 			*data = (get_distance(ray.origin, v_intersection));
 			*(data + 1) = 'V';
 		}
 		else
 		{
-			draw_line(new_vector(ray.origin, h_intersection), color);
+			if (draw)
+				draw_line(new_vector(ray.origin, h_intersection), color);
 			*data = (get_distance(ray.origin, h_intersection));
 			*(data + 1) = 'H';
 		}
@@ -329,11 +333,14 @@ int	render(t_game *game)
 	float			x1;
 	float			y1;
 	float			i;
-	int				*data;
+	int				j;
+	float				*data;
+	float			distance[SCREEN_WIDTH];
+	char			status[SCREEN_WIDTH];
 	clear();
 	update_player_vector(game);
-	draw_blocks(game, game->minimap_block_d);
 	i = 0;
+	j = 0;
 	angle = game->player_view_angle - VIEW_RANGE / 2;
 	while (i < VIEW_RANGE)
 	{
@@ -343,14 +350,18 @@ int	render(t_game *game)
 		y1 = DIRECTION_LEN * sin((angle) * PI / 180);
 		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), 0xFFFFFF);
 		// YOU GET RAYS DISTANCES HERE ↓↓↓↓↓
-		data = cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game, 0xFFFFFF);
-		printf("%d-> %c\n", *data, *(data + 1));
+		data = cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game, 0xFFFFFF, FALSE);
+		distance[j] = (*data) * (cos((i - 30) * PI / 180)) ;
+		status[j] = *(data + 1);
 		// YOU GET RAYS DISTANCES HERE ↑↑↑↑↑
-		angle += .1;
-		i += .1;
+		angle += 0.05859375;
+		i += 0.05859375;
+		j++;
 	}
+	draw_3d(game, distance, status);
+	cast_ray(game->player_vector, game, 0x0000FF, TRUE);
+	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
-	cast_ray(game->player_vector, game, 0x0000FF);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
@@ -360,8 +371,8 @@ int	main(void)
 	t_game	game;
 
 	/* parsing */
-	game.map_height = 18; // 8, 18, 18
-	game.map_width = 18; // 6, 18, 220
+	game.map_height = 8; // 8, 18, 18
+	game.map_width = 6; // 6, 18, 220
 	game.player_vector.origin.x = 4; // player x position
 	game.player_vector.origin.y = 4; // player y position
 	game.player_orientation = SOUTH;
@@ -371,6 +382,7 @@ int	main(void)
 		WEST: LISER
 		EAST: LIMEN
 	*/
+	printf("%d\n", getpid());
 	game.map = "\
 111111\
 101011\
@@ -380,27 +392,26 @@ int	main(void)
 100001\
 101001\
 111111";
-printf("%d\n", getpid());
-	game.map = "\
-111111111111111111\
-100000000000000001\
-100000000000000001\
-100000000000100001\
-100000000001000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000000000000001\
-100000001000011101\
-100000000000000001\
-100000000000000001\
-111111111111111111\
-";
+// 	game.map = "\
+// 111111111111111111\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000100001\
+// 100000000001000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000000000000001\
+// 100000001000011101\
+// 100000000000000001\
+// 100000000000000001\
+// 111111111111111111\
+// ";
 // 	game.map = "\
 // 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\
 // 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\

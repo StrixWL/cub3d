@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/07 05:50:56 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/12 20:52:25 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void	draw_blocks(t_game *game, int d)
 		y = (i / game->map_width) * d;
 		if (game->map[i++] == '1')
 			draw_square(x, y, d, 0xFF0000);
+		// else
+		// 	draw_square(x, y, d, 0xFFC0CB);
+
 	}
 }
 

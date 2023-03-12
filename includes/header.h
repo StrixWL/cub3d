@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/12 11:19:36 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/12 18:19:48 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # define SCREEN_HEIGHT 512
 # define SCREEN_WIDTH 1024
-# define MINIMAP_SCALE 1
+# define MINIMAP_SCALE .2
 # define MINIMAP_PLAYER_SCALE .6
 # define DIRECTION_LEN 400000000 // 80
 # define PI 3.141592653589793
@@ -109,5 +109,9 @@ void		draw_line(t_vector line, int color);
 /* objects */
 t_pos		new_pos(int x, int y);
 t_vector	new_vector(t_pos origin, t_pos direction);
+
+/*3d* randering*/
+void draw_3d(t_game *game, float *distance, char *status);
+void	put_pixel2(int x, int y, int color);
 
 #endif

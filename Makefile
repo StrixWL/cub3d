@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+         #
+#    By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/02 08:10:39 by bel-amri          #+#    #+#              #
-#    Updated: 2023/03/04 21:16:02 by bel-amri         ###   ########.fr        #
+#    Updated: 2023/03/12 18:02:49 by yabidi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRC_DIR=		src
 SRC_FILES=		main.c \
 				src/minimap.c \
 				src/objects.c \
-				src/drawers.c
+				src/drawers.c \
+				src/draw_3d.c
 
 OBJ_FILES=		$(SRC_FILES:.c=.o)
 
