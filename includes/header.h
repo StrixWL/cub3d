@@ -22,8 +22,8 @@
 # define SCREEN_HEIGHT 512
 # define SCREEN_WIDTH 1024
 # define MINIMAP_SCALE 1
-# define MINIMAP_PLAYER_SCALE .2
-# define DIRECTION_LEN 300
+# define MINIMAP_PLAYER_SCALE .6
+# define DIRECTION_LEN 400000000 // 80
 # define PI 3.141592653589793
 # define GAP 5
 
@@ -35,8 +35,8 @@
 # define M_BACKWARD 1
 
 # define ROT_SPEED 5
-# define MVT_SPEED 3
-# define VIEW_RANGE 60
+# define MVT_SPEED 6
+# define VIEW_RANGE 360
 
 /* enums */
 typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
