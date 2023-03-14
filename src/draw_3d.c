@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/14 01:20:36 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/14 09:58:43 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	put_pixel2(int x, int y, int color)
 	if (x < 0 || y < 0 || x > SCREEN_WIDTH - 1 || y > SCREEN_HEIGHT - 1)
 		return ;	
 	data = img_save(NULL);
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
+	dst = data->addr + (y * data->line_length + x * 4);
+	*(int *)dst = color;
 }
 
 void	draw_line2(t_vector line, int color)
@@ -51,7 +51,7 @@ void draw_3d(t_game *game, float *distance, char *status, int *intersection)
 
     i = 0;
 	int k = 0;
-    while(i < SCREEN_WIDTH)
+    while(i < SCREEN_WIDTH - 1)
     {
         // if (distance[i] > 60)
         //     distance[i] = 60;
@@ -63,7 +63,9 @@ void draw_3d(t_game *game, float *distance, char *status, int *intersection)
 		line.origin.y = (SCREEN_HEIGHT - line_heigh[i]) / 2;
 		line.direction.x = line.origin.x;
 		line.direction.y = line.origin.y + line_heigh[i];
-		int color = (intersection[i] + 1) * 0x00FFFF;
+		if (intersection[i] == game->minimap_block_d - 1)
+			intersection[i] = 0;
+		int color = (intersection[i]) * 0x00FFFF;
 		if (status[i] == NORTH || status[i] == SOUTH)
 			draw_line2(line, color);
 		if (status[i] == WEST || status[i] == EAST)

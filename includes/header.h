@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/14 01:07:55 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/14 09:22:19 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define M_BACKWARD 1
 
 # define ROT_SPEED 5
-# define MVT_SPEED 6
+# define MVT_SPEED 8
 # define VIEW_RANGE 60
 
 /* enums */

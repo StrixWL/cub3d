@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/14 01:13:27 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/14 09:56:26 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,13 +360,10 @@ int	render(t_game *game)
 			angle = angle - 360;
 		x1 = DIRECTION_LEN * cos((angle) * PI / 180);
 		y1 = DIRECTION_LEN * sin((angle) * PI / 180);
-		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), 0xFFFFFF);
-		// YOU GET RAYS DISTANCES HERE ↓↓↓↓↓
 		data = cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game, 0xFFFFFF, FALSE);
 		distance[j] = data.distance * (cos((i - 30) * PI / 180)) ;
 		status[j] = data.orientation;
 		intersection[j] = data.intersection;
-		// YOU GET RAYS DISTANCES HERE ↑↑↑↑↑
 		angle += w;
 		i += w;
 		j++;
@@ -376,6 +373,20 @@ int	render(t_game *game)
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+	if (game->pressed_keys.m_forward)
+		mlx_string_put(game->mlx, game->win, 300, 200, 0xA020F0, "w");
+	if (game->pressed_keys.m_backward)
+		mlx_string_put(game->mlx, game->win, 300, 230, 0xA020F0, "z");
+	if (game->pressed_keys.m_right)
+		mlx_string_put(game->mlx, game->win, 330, 230, 0xA020F0, "d");
+	if (game->pressed_keys.m_left)
+		mlx_string_put(game->mlx, game->win, 270, 230, 0xA020F0, "a");
+	if (game->pressed_keys.r_right)
+		mlx_string_put(game->mlx, game->win, 330, 250, 0xA020F0, "right");
+	if (game->pressed_keys.r_left)
+		mlx_string_put(game->mlx, game->win, 240, 250, 0xA020F0, "left");
+	
+
 	return (0);
 }
 
@@ -384,8 +395,8 @@ int	main(void)
 	t_game	game;
 
 	/* parsing */
-	game.map_height = 8; // 8, 18, 18
-	game.map_width = 6; // 6, 18, 220
+	game.map_height = 18; // 8, 18, 18
+	game.map_width = 18; // 6, 18, 220
 	game.player_vector.origin.x = 3; // player x position
 	game.player_vector.origin.y = 3; // player y position
 	game.player_orientation = SOUTH;
@@ -405,26 +416,26 @@ int	main(void)
 100001\
 101001\
 111111";
-// 	game.map = "\
-// 111111111111111111\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000100001\
-// 100000000001000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000000000000001\
-// 100000001000011101\
-// 100000000000000001\
-// 100000000000000001\
-// 111111111111111111\
-// ";
+	game.map = "\
+111111111111111111\
+100000000000000001\
+100010000000000001\
+100010000000100001\
+100010000001000001\
+100010000000000001\
+100000000000000001\
+100100000000000001\
+100100000000000001\
+100100000000000001\
+100000000100000001\
+100000000000000001\
+100000010000000001\
+100000000000000001\
+100000001000011101\
+100000000000000001\
+100000000000000001\
+111111111111111111\
+";
 // 	game.map = "\
 // 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\
 // 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
