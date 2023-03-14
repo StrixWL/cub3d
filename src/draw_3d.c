@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_3d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/12 19:24:36 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/14 01:20:36 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,29 +43,31 @@ void	draw_line2(t_vector line, int color)
 	return ;
 }
 
-void draw_3d(t_game *game, float *distance, char *status)
+void draw_3d(t_game *game, float *distance, char *status, int *intersection)
 {
     int i;
-    float line_heigh[1024];
+    float line_heigh[SCREEN_WIDTH];
     t_vector line;
 
     i = 0;
+	int k = 0;
     while(i < SCREEN_WIDTH)
     {
         // if (distance[i] > 60)
         //     distance[i] = 60;
         line_heigh[i] = 1000 * game->minimap_block_d / distance[i];
 		// printf("%f\n", line_heigh[i]);
-		if (line_heigh[i] > 512)
-			line_heigh[i] = 512;
+		if (line_heigh[i] > SCREEN_HEIGHT)
+			line_heigh[i] = SCREEN_HEIGHT;
 		line.origin.x = i ;
 		line.origin.y = (SCREEN_HEIGHT - line_heigh[i]) / 2;
 		line.direction.x = line.origin.x;
 		line.direction.y = line.origin.y + line_heigh[i];
-		if (status[i] == 'V')
-			draw_line2(line, 0xFFFFFF);
-		if (status[i] == 'H')
-			draw_line2(line, 0xababab);
+		int color = (intersection[i] + 1) * 0x00FFFF;
+		if (status[i] == NORTH || status[i] == SOUTH)
+			draw_line2(line, color);
+		if (status[i] == WEST || status[i] == EAST)
+			draw_line2(line, color);
         i++;
     }
 }

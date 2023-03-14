@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/12 18:19:48 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/14 01:07:55 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <math.h>
 # include <stdlib.h>
 
-# define SCREEN_HEIGHT 512
-# define SCREEN_WIDTH 1024
+# define SCREEN_HEIGHT 1080
+# define SCREEN_WIDTH 1920
 # define MINIMAP_SCALE .2
 # define MINIMAP_PLAYER_SCALE .6
 # define DIRECTION_LEN 400000000 // 80
@@ -35,7 +35,7 @@
 # define M_BACKWARD 1
 
 # define ROT_SPEED 5
-# define MVT_SPEED 3
+# define MVT_SPEED 6
 # define VIEW_RANGE 60
 
 /* enums */
@@ -45,7 +45,7 @@ typedef enum e_direction {
 	SOUTH,
 	EAST,
 	WEST
-}				t_direction;
+}				t_orientation;
 /* 7it 3arfek 7mar
 	NORTH: LFO9
 	SOUTH: LTE7T
@@ -90,10 +90,19 @@ typedef struct s_game
 	int				minimap_block_d;
 	int				minimap_player_d;
 	t_pressed_keys	pressed_keys;
-	t_direction		player_orientation;
+	t_orientation	player_orientation;
 	t_vector		player_vector;
 	int				player_view_angle;
 }					t_game;
+typedef struct s_ray_data
+{
+	float			distance;
+	t_orientation	orientation;
+	int				intersection;
+	t_orientation	v_orientation; // you dont need this
+	t_orientation	h_orientation; // you dont need this
+}				t_ray_data;
+
 
 /* -> prototypes <- */
 /* global */
@@ -111,7 +120,8 @@ t_pos		new_pos(int x, int y);
 t_vector	new_vector(t_pos origin, t_pos direction);
 
 /*3d* randering*/
-void draw_3d(t_game *game, float *distance, char *status);
+void	draw_3d(t_game *game, float *distance, char *status, int *intersection);
 void	put_pixel2(int x, int y, int color);
 
 #endif
+

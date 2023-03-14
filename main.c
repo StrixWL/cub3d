@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/12 20:56:38 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/14 01:13:27 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ void	update_player_vector(t_game *game)
 	}
 }
 
-t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
+t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray, t_ray_data *data)
 {
 	float	a;
 	float	b;
@@ -183,6 +183,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 		return (FALSE);
 	else if (ray.origin.y > ray.direction.y) // looking up
 	{
+		data->h_orientation = NORTH;
 		h_intersection->y = floor(ray.origin.y / game->minimap_block_d) * game->minimap_block_d;
 		while (h_intersection->y > 0)
 		{
@@ -204,6 +205,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	}
 	else
 	{
+		data->h_orientation = SOUTH;
 		h_intersection->y = (floor(ray.origin.y / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
 		while (h_intersection->y < SCREEN_HEIGHT)
 		{
@@ -228,7 +230,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	return (FALSE);
 }
 
-t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
+t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray, t_ray_data *data)
 {
 	float	a;
 	float	b;
@@ -239,6 +241,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 		return (FALSE);
 	else if (ray.origin.x > ray.direction.x) // looking left
 	{
+		data->v_orientation = WEST;
 		h_intersection->x = floor(ray.origin.x / game->minimap_block_d) * game->minimap_block_d;
 		while (h_intersection->x > 0)
 		{
@@ -255,6 +258,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray)
 	}
 	else
 	{
+		data->v_orientation = EAST;
 		h_intersection->x = (floor(ray.origin.x / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
 		while (h_intersection->x < SCREEN_WIDTH)
 		{
@@ -282,30 +286,31 @@ float		get_distance(t_pos p1, t_pos p2)
 	return (d);
 }
 
-float	*cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
+t_ray_data	cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 {
-	t_pos	h_intersection;
-	t_pos	v_intersection;
-	float		*data;
-	int		h_code;
-	int		v_code;
+	t_pos		h_intersection;
+	t_pos		v_intersection;
+	t_ray_data	data;
+	int			h_code;
+	int			v_code;
 
-	data = malloc(2 * sizeof(int));
-	h_code = get_h_intersection(game, &h_intersection, ray);
-	v_code = get_v_intersection(game, &v_intersection, ray);
+	h_code = get_h_intersection(game, &h_intersection, ray, &data);
+	v_code = get_v_intersection(game, &v_intersection, ray, &data);
 	if (!h_code && v_code)
 	{
 		if (draw)
 			draw_line(new_vector(ray.origin, v_intersection), color);
-		*data = (get_distance(ray.origin, v_intersection));
-		*(data + 1) = 'V';
+		data.intersection = v_intersection.y - (floor(v_intersection.y / game->minimap_block_d) * game->minimap_block_d);
+		data.distance = (get_distance(ray.origin, v_intersection));
+		data.orientation = data.v_orientation;
 	}
 	else if (!v_code && h_code)
 	{
 		if (draw)
 			draw_line(new_vector(ray.origin, h_intersection), color);
-		*data = (get_distance(ray.origin, h_intersection));
-		*(data + 1) = 'H';
+		data.distance = (get_distance(ray.origin, h_intersection));
+		data.intersection = h_intersection.x - (floor(h_intersection.x / game->minimap_block_d) * game->minimap_block_d);
+		data.orientation = data.h_orientation;
 	}
 	else
 	{
@@ -313,15 +318,17 @@ float	*cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 		{
 			if (draw)
 				draw_line(new_vector(ray.origin, v_intersection), color);
-			*data = (get_distance(ray.origin, v_intersection));
-			*(data + 1) = 'V';
+			data.intersection = v_intersection.y - (floor(v_intersection.y / game->minimap_block_d) * game->minimap_block_d);
+			data.distance = (get_distance(ray.origin, v_intersection));
+			data.orientation = data.v_orientation;
 		}
 		else
 		{
 			if (draw)
 				draw_line(new_vector(ray.origin, h_intersection), color);
-			*data = (get_distance(ray.origin, h_intersection));
-			*(data + 1) = 'H';
+			data.distance = (get_distance(ray.origin, h_intersection));
+			data.intersection = h_intersection.x - (floor(h_intersection.x / game->minimap_block_d) * game->minimap_block_d);
+			data.orientation = data.h_orientation;
 		}
 	}
 	return data;
@@ -334,14 +341,19 @@ int	render(t_game *game)
 	float			y1;
 	float			i;
 	int				j;
-	float				*data;
+	t_ray_data		data;
 	float			distance[SCREEN_WIDTH];
 	char			status[SCREEN_WIDTH];
+	int				intersection[SCREEN_WIDTH];
+	float			w;
+
+	w = 60 / (float)SCREEN_WIDTH;
 	clear();
 	update_player_vector(game);
 	i = 0;
 	j = 0;
 	angle = game->player_view_angle - VIEW_RANGE / 2;
+
 	while (i < VIEW_RANGE)
 	{
 		if (angle >= 360)
@@ -351,14 +363,15 @@ int	render(t_game *game)
 		// draw_line(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), 0xFFFFFF);
 		// YOU GET RAYS DISTANCES HERE ↓↓↓↓↓
 		data = cast_ray(new_vector(game->player_vector.origin, new_pos(game->player_vector.origin.x + x1, game->player_vector.origin.y + y1)), game, 0xFFFFFF, FALSE);
-		distance[j] = (*data) * (cos((i - 30) * PI / 180)) ;
-		status[j] = *(data + 1);
+		distance[j] = data.distance * (cos((i - 30) * PI / 180)) ;
+		status[j] = data.orientation;
+		intersection[j] = data.intersection;
 		// YOU GET RAYS DISTANCES HERE ↑↑↑↑↑
-		angle += 0.05859375;
-		i += 0.05859375;
+		angle += w;
+		i += w;
 		j++;
 	}
-	draw_3d(game, distance, status);
+	draw_3d(game, distance, status, intersection);
 	cast_ray(game->player_vector, game, 0x0000FF, TRUE);
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
@@ -373,8 +386,8 @@ int	main(void)
 	/* parsing */
 	game.map_height = 8; // 8, 18, 18
 	game.map_width = 6; // 6, 18, 220
-	game.player_vector.origin.x = 4; // player x position
-	game.player_vector.origin.y = 4; // player y position
+	game.player_vector.origin.x = 3; // player x position
+	game.player_vector.origin.y = 3; // player y position
 	game.player_orientation = SOUTH;
 	/* 7it 3arfek 7mar
 		NORTH: LFO9
