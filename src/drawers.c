@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 21:00:23 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/13 11:06:19 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/15 03:04:32 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	put_pixel(int x, int y, int color)
 	t_img_data	*data;
 	char		*dst;
 
-	if (x < 0 || y < 0 || x > SCREEN_WIDTH - 1 || y > SCREEN_HEIGHT - 1)
-		return ;
 	x *= MINIMAP_SCALE;
 	y *= MINIMAP_SCALE;
+	if (x < 0 || y < 0 || x > SCREEN_WIDTH - 1 || y > SCREEN_HEIGHT - 1)
+		return ;
 	data = img_save(NULL);
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;

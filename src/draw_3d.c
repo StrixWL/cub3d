@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/14 09:58:43 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/15 09:46:17 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	draw_line2(t_vector line, int color)
 	return ;
 }
 
-void draw_3d(t_game *game, float *distance, char *status, int *intersection)
+void draw_3d(t_game *game, float *distance, char *status, int *intersection, int *code)
 {
     int i;
     float line_heigh[SCREEN_WIDTH];
@@ -55,7 +55,7 @@ void draw_3d(t_game *game, float *distance, char *status, int *intersection)
     {
         // if (distance[i] > 60)
         //     distance[i] = 60;
-        line_heigh[i] = 1000 * game->minimap_block_d / distance[i];
+        line_heigh[i] = 1600 * game->minimap_block_d / distance[i];
 		// printf("%f\n", line_heigh[i]);
 		if (line_heigh[i] > SCREEN_HEIGHT)
 			line_heigh[i] = SCREEN_HEIGHT;
@@ -66,6 +66,11 @@ void draw_3d(t_game *game, float *distance, char *status, int *intersection)
 		if (intersection[i] == game->minimap_block_d - 1)
 			intersection[i] = 0;
 		int color = (intersection[i]) * 0x00FFFF;
+		// if (!code[i])
+		// {
+		// 	i++;
+		// 	continue ;
+		// }
 		if (status[i] == NORTH || status[i] == SOUTH)
 			draw_line2(line, color);
 		if (status[i] == WEST || status[i] == EAST)

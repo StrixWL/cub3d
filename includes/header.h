@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/14 09:22:19 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/15 09:20:38 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 
 # define SCREEN_HEIGHT 1080
 # define SCREEN_WIDTH 1920
-# define MINIMAP_SCALE .2
+# define MINIMAP_SCALE .25
 # define MINIMAP_PLAYER_SCALE .6
+# define RENDER_RANGE 1000
 # define DIRECTION_LEN 400000000 // 80
 # define PI 3.141592653589793
 # define GAP 5
@@ -35,7 +36,7 @@
 # define M_BACKWARD 1
 
 # define ROT_SPEED 5
-# define MVT_SPEED 8
+# define MVT_SPEED 20
 # define VIEW_RANGE 60
 
 /* enums */
@@ -87,6 +88,8 @@ typedef struct s_game
 	char			*map;
 	int				map_height;
 	int				map_width;
+	int				units_height;
+	int				units_width;
 	int				minimap_block_d;
 	int				minimap_player_d;
 	t_pressed_keys	pressed_keys;
@@ -99,6 +102,7 @@ typedef struct s_ray_data
 	float			distance;
 	t_orientation	orientation;
 	int				intersection;
+	int				code;
 	t_orientation	v_orientation; // you dont need this
 	t_orientation	h_orientation; // you dont need this
 }				t_ray_data;
@@ -120,7 +124,7 @@ t_pos		new_pos(int x, int y);
 t_vector	new_vector(t_pos origin, t_pos direction);
 
 /*3d* randering*/
-void	draw_3d(t_game *game, float *distance, char *status, int *intersection);
+void	draw_3d(t_game *game, float *distance, char *status, int *intersection, int *code);
 void	put_pixel2(int x, int y, int color);
 
 #endif

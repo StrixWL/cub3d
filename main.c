@@ -6,7 +6,7 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/14 09:56:26 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/15 09:49:07 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray, t_r
 	{
 		data->h_orientation = SOUTH;
 		h_intersection->y = (floor(ray.origin.y / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
-		while (h_intersection->y < SCREEN_HEIGHT)
+		while (h_intersection->y < game->units_height)
 		{
 			delta.x = ray.origin.x - ray.direction.x;
 			delta.y = ray.origin.y - ray.direction.y;
@@ -225,7 +225,7 @@ t_bool	get_h_intersection(t_game *game, t_pos *h_intersection, t_vector ray, t_r
 				break ;
 		}
 	}
-	if (h_intersection->y > 0 && h_intersection->y < SCREEN_HEIGHT)
+	if (h_intersection->y > 0 && h_intersection->y < game->units_height)
 		return (TRUE);
 	return (FALSE);
 }
@@ -260,7 +260,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray, t_r
 	{
 		data->v_orientation = EAST;
 		h_intersection->x = (floor(ray.origin.x / game->minimap_block_d) * game->minimap_block_d) + game->minimap_block_d;
-		while (h_intersection->x < SCREEN_WIDTH)
+		while (h_intersection->x < game->units_width)
 		{
 			delta.x = ray.origin.x - ray.direction.x;
 			delta.y = ray.origin.y - ray.direction.y;
@@ -273,7 +273,7 @@ t_bool	get_v_intersection(t_game *game, t_pos *h_intersection, t_vector ray, t_r
 				break ;
 		}
 	}
-	if (h_intersection->x > 0 && h_intersection->x < SCREEN_WIDTH)
+	if (h_intersection->x > 0 && h_intersection->x < game->units_width)
 		return (TRUE);
 	return (FALSE);
 }
@@ -303,6 +303,7 @@ t_ray_data	cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 		data.intersection = v_intersection.y - (floor(v_intersection.y / game->minimap_block_d) * game->minimap_block_d);
 		data.distance = (get_distance(ray.origin, v_intersection));
 		data.orientation = data.v_orientation;
+		data.code = v_code;
 	}
 	else if (!v_code && h_code)
 	{
@@ -311,6 +312,7 @@ t_ray_data	cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 		data.distance = (get_distance(ray.origin, h_intersection));
 		data.intersection = h_intersection.x - (floor(h_intersection.x / game->minimap_block_d) * game->minimap_block_d);
 		data.orientation = data.h_orientation;
+		data.code = h_code;
 	}
 	else
 	{
@@ -321,6 +323,7 @@ t_ray_data	cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 			data.intersection = v_intersection.y - (floor(v_intersection.y / game->minimap_block_d) * game->minimap_block_d);
 			data.distance = (get_distance(ray.origin, v_intersection));
 			data.orientation = data.v_orientation;
+			data.code = v_code;
 		}
 		else
 		{
@@ -329,6 +332,7 @@ t_ray_data	cast_ray(t_vector ray, t_game *game, int color, t_bool draw)
 			data.distance = (get_distance(ray.origin, h_intersection));
 			data.intersection = h_intersection.x - (floor(h_intersection.x / game->minimap_block_d) * game->minimap_block_d);
 			data.orientation = data.h_orientation;
+			data.code = h_code;
 		}
 	}
 	return data;
@@ -345,6 +349,7 @@ int	render(t_game *game)
 	float			distance[SCREEN_WIDTH];
 	char			status[SCREEN_WIDTH];
 	int				intersection[SCREEN_WIDTH];
+	int				code[SCREEN_WIDTH];
 	float			w;
 
 	w = 60 / (float)SCREEN_WIDTH;
@@ -368,23 +373,23 @@ int	render(t_game *game)
 		i += w;
 		j++;
 	}
-	draw_3d(game, distance, status, intersection);
+	draw_3d(game, distance, status, intersection, NULL);
 	cast_ray(game->player_vector, game, 0x0000FF, TRUE);
 	draw_blocks(game, game->minimap_block_d);
 	draw_player(*game, game->minimap_player_d);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	if (game->pressed_keys.m_forward)
-		mlx_string_put(game->mlx, game->win, 300, 200, 0xA020F0, "w");
+		mlx_string_put(game->mlx, game->win, 600, 200, 0xA020F0, "w");
 	if (game->pressed_keys.m_backward)
-		mlx_string_put(game->mlx, game->win, 300, 230, 0xA020F0, "z");
+		mlx_string_put(game->mlx, game->win, 600, 230, 0xA020F0, "z");
 	if (game->pressed_keys.m_right)
-		mlx_string_put(game->mlx, game->win, 330, 230, 0xA020F0, "d");
+		mlx_string_put(game->mlx, game->win, 630, 230, 0xA020F0, "d");
 	if (game->pressed_keys.m_left)
-		mlx_string_put(game->mlx, game->win, 270, 230, 0xA020F0, "a");
+		mlx_string_put(game->mlx, game->win, 570, 230, 0xA020F0, "a");
 	if (game->pressed_keys.r_right)
-		mlx_string_put(game->mlx, game->win, 330, 250, 0xA020F0, "right");
+		mlx_string_put(game->mlx, game->win, 630, 250, 0xA020F0, "right");
 	if (game->pressed_keys.r_left)
-		mlx_string_put(game->mlx, game->win, 240, 250, 0xA020F0, "left");
+		mlx_string_put(game->mlx, game->win, 540, 250, 0xA020F0, "left");
 	
 
 	return (0);
@@ -395,8 +400,10 @@ int	main(void)
 	t_game	game;
 
 	/* parsing */
-	game.map_height = 18; // 8, 18, 18
+	game.map_height = 18; // 8, 18, 18	
 	game.map_width = 18; // 6, 18, 220
+	game.units_height = game.map_height * 100;
+	game.units_width = game.map_width * 100;
 	game.player_vector.origin.x = 3; // player x position
 	game.player_vector.origin.y = 3; // player y position
 	game.player_orientation = SOUTH;
@@ -465,10 +472,7 @@ int	main(void)
 	game.img.addr = mlx_get_data_addr(game.img.img, &game.img.bits_per_pixel,
 					&game.img.line_length, &game.img.endian);
 	img_save(&game.img);
-	if (game.map_height >= game.map_width)
-		game.minimap_block_d = SCREEN_HEIGHT / game.map_height;
-	else
-		game.minimap_block_d = SCREEN_WIDTH / game.map_width;
+	game.minimap_block_d = 100;
 	game.minimap_player_d = game.minimap_block_d * MINIMAP_PLAYER_SCALE; // .35
 	game.player_vector.origin.x = game.player_vector.origin.x * game.minimap_block_d + game.minimap_block_d / 2;
 	game.player_vector.origin.y = game.player_vector.origin.y * game.minimap_block_d + game.minimap_block_d / 2;
