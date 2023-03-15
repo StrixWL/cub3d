@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/15 09:20:38 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/15 10:03:56 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_vector
 {
 	t_pos	origin;
 	t_pos	direction;
+	float		heigh;
 }					t_vector;
 typedef struct s_img_data {
 	void	*img;
@@ -123,7 +124,7 @@ void		draw_line(t_vector line, int color);
 t_pos		new_pos(int x, int y);
 t_vector	new_vector(t_pos origin, t_pos direction);
 
-/*3d* randering*/
+/*3d* rendering*/
 void	draw_3d(t_game *game, float *distance, char *status, int *intersection, int *code);
 void	put_pixel2(int x, int y, int color);
 
