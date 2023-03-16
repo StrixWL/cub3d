@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_3d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/15 17:11:02 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/16 05:37:28 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void floor_ceil()
 	}
 }
 
-void	draw_3d(t_game *game, float *distance, char *status, int *intersection, int *code)
+void	draw_3d(t_game *game, float *distance, char *status, int *intersection)
 {
     int i;
     float line_heigh[SCREEN_WIDTH];
@@ -103,7 +103,7 @@ void	draw_3d(t_game *game, float *distance, char *status, int *intersection, int
 
     i = 0;
 	int k = 0;
-	img = mlx_xpm_file_to_image(game->mlx, "uk.xpm", &w, &h);
+	img = mlx_xpm_file_to_image(game->mlx, "miku.xpm", &w, &h);
 	image = mlx_get_data_addr(img, &bits_per_pixel,
 					&line_length, &endian);
 
@@ -111,6 +111,11 @@ void	draw_3d(t_game *game, float *distance, char *status, int *intersection, int
 	i = 0;
     while(i < SCREEN_WIDTH)
     {
+		if (distance[i] >= RENDER_RANGE)
+		{
+			i++;
+			continue;
+		}
         // if (distance[i] > 60)
         //     distance[i] = 60;
         line_heigh[i] = 1000 * game->minimap_block_d / distance[i];

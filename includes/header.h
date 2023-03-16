@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/15 10:03:56 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/16 03:31:21 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@
 
 # define SCREEN_HEIGHT 1080
 # define SCREEN_WIDTH 1920
-# define MINIMAP_SCALE .25
-# define MINIMAP_PLAYER_SCALE .6
-# define RENDER_RANGE 1000
+# define MINIMAP_SCALE .05
+# define MINIMAP_PLAYER_SCALE 100
 # define DIRECTION_LEN 400000000 // 80
 # define PI 3.141592653589793
 # define GAP 5
@@ -36,8 +35,9 @@
 # define M_BACKWARD 1
 
 # define ROT_SPEED 5
-# define MVT_SPEED 20
+# define MVT_SPEED 50
 # define VIEW_RANGE 60
+# define RENDER_RANGE 5000
 
 /* enums */
 typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
@@ -87,6 +87,7 @@ typedef struct s_game
 	void			*win;
 	t_img_data		img;
 	char			*map;
+	int				map_len;
 	int				map_height;
 	int				map_width;
 	int				units_height;
@@ -125,7 +126,7 @@ t_pos		new_pos(int x, int y);
 t_vector	new_vector(t_pos origin, t_pos direction);
 
 /*3d* rendering*/
-void	draw_3d(t_game *game, float *distance, char *status, int *intersection, int *code);
+void	draw_3d(t_game *game, float *distance, char *status, int *intersection);
 void	put_pixel2(int x, int y, int color);
 
 #endif
