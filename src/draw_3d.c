@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_3d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/16 05:37:28 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/16 13:39:41 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,24 @@ void	put_pixel2(int x, int y, int color)
 
 void	draw_line2(t_game *game, t_vector line, int intersection, char *image, int line_length, int bits_per_pixel)
 {
-	int x_p;
-	int y_p;
-	int x2;
-	int y2;
+	int x_color;
+	int y_color;
 	int where_y;
 	int	color;
+
 	where_y = 0;
-	x_p = (intersection * 100) / game->minimap_block_d;
-	y_p = (where_y * 100) / line.heigh;
-	y2 = (y_p * 350)/100;
-	x2 = (x_p * 225)/100;
-	// printf("%d\n", x2);
-	color = *((int *)(image + (y2 * line_length + (x2 * bits_per_pixel / 8))));
-		// printf("%d \n", intersection);
-	while (line.origin.y < line.direction.y)
+	if (line.origin.y < 0)
 	{
-		y2 = (y_p * 350)/100;
-		line.origin.y++;
+		where_y = line.origin.y * -1;
+		line.origin.y = 0;
+	}
+	while (line.origin.y < line.direction.y && line.origin.y < SCREEN_HEIGHT)
+	{
+		y_color = (((where_y * 100) / line.heigh) * 350)/100;
+		x_color = (((intersection * 100) / game->minimap_block_d) * 225)/100;
 		put_pixel2(line.origin.x, line.origin.y, color);
-	y_p = (where_y * 100)/ line.heigh;
-	
-	color = *((int *)(image + (y2 * line_length + (x2 * (bits_per_pixel / 8)))));
-	
+		color = *((int *)(image + (y_color * line_length + (x_color * (bits_per_pixel / 8)))));
+		line.origin.y++;
 		where_y++;
 	}
 	return ;
@@ -111,32 +106,23 @@ void	draw_3d(t_game *game, float *distance, char *status, int *intersection)
 	i = 0;
     while(i < SCREEN_WIDTH)
     {
-		if (distance[i] >= RENDER_RANGE)
-		{
-			i++;
-			continue;
-		}
-        // if (distance[i] > 60)
-        //     distance[i] = 60;
-        line_heigh[i] = 1000 * game->minimap_block_d / distance[i];
-		// printf("%f\n", line_heigh[i]);
-		// if (line_heigh[i] > SCREEN_HEIGHT)
-		// 	line_heigh[i] = SCREEN_HEIGHT;
-		line.origin.x = i ;
-		line.origin.y = (SCREEN_HEIGHT - line_heigh[i]) / 2;
-		line.direction.x = line.origin.x;
-		line.direction.y = line.origin.y + line_heigh[i];
-		
-		int color = (intersection[i] + 1) * 0x00FFFF;
-		line.heigh = line_heigh[i];
-		// if (status[i] == NORTH || status[i] == SOUTH)
-		// if (status[i] == WEST || status[i] == EAST)
-			draw_line2(game, line, intersection[i] ,image, line_length, bits_per_pixel);
-		// 	draw_line2(line, color);
-		// if (status[i] == NORTH || status[i] == NORTH)
-			// draw_line2(line, color);
-		// if (status[i] == WEST || status[i] == WEST)
-		// 	draw_line2(line, color);
+		// if (distance[i] <= RENDER_RANGE)
+		// {
+			line_heigh[i] = 1000 * game->minimap_block_d / distance[i];
+			line.origin.x = i ;
+			line.origin.y = (SCREEN_HEIGHT - line_heigh[i]) / 2;
+			line.direction.x = line.origin.x;
+			line.direction.y = line.origin.y + line_heigh[i];
+			line.heigh = line_heigh[i];
+			// if (status[i] == NORTH || status[i] == SOUTH)
+			// if (status[i] == WEST || status[i] == EAST)
+				draw_line2(game, line, intersection[i] ,image, line_length, bits_per_pixel);
+			// 	draw_line2(line, color);
+			// if (status[i] == NORTH || status[i] == NORTH)
+				// draw_line2(line, color);
+			// if (status[i] == WEST || status[i] == WEST)
+			// 	draw_line2(line, color);
+		// }
         i++;
     }
 }

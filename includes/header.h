@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/16 03:31:21 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/16 13:42:28 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define M_BACKWARD 1
 
 # define ROT_SPEED 5
-# define MVT_SPEED 50
+# define MVT_SPEED 3 // makhash ykon y9sm 100
 # define VIEW_RANGE 60
 # define RENDER_RANGE 5000
 
