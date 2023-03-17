@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+         #
+#    By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/02 08:10:39 by bel-amri          #+#    #+#              #
-#    Updated: 2023/03/15 10:07:12 by yabidi           ###   ########.fr        #
+#    Updated: 2023/03/17 21:27:27 by bel-amri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,12 @@ CC=				cc
 HEADERS=		includes/header.h
 SRC_DIR=		src
 SRC_FILES=		main.c \
-				src/minimap.c \
+				src/keys_handler.c \
 				src/objects.c \
-				src/drawers.c \
+				src/raycasting.c \
+				src/player_movement.c \
+				src/intersections/v_intersections.c \
+				src/intersections/h_intersections.c \
 				src/draw_3d.c
 
 OBJ_FILES=		$(SRC_FILES:.c=.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_3d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/16 13:39:41 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/17 01:36:42 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,9 @@ void	draw_3d(t_game *game, float *distance, char *status, int *intersection)
 	i = 0;
     while(i < SCREEN_WIDTH)
     {
-		// if (distance[i] <= RENDER_RANGE)
-		// {
-			line_heigh[i] = 1000 * game->minimap_block_d / distance[i];
+		if (distance[i] <= RENDER_RANGE)
+		{
+			line_heigh[i] = 2000 * game->minimap_block_d / distance[i];
 			line.origin.x = i ;
 			line.origin.y = (SCREEN_HEIGHT - line_heigh[i]) / 2;
 			line.direction.x = line.origin.x;
@@ -122,7 +122,7 @@ void	draw_3d(t_game *game, float *distance, char *status, int *intersection)
 				// draw_line2(line, color);
 			// if (status[i] == WEST || status[i] == WEST)
 			// 	draw_line2(line, color);
-		// }
+		}
         i++;
     }
 }

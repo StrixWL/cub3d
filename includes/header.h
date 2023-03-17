@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/16 13:42:28 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/17 21:30:47 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,23 @@
 # include <math.h>
 # include <stdlib.h>
 
+/* variables */
 # define SCREEN_HEIGHT 1080
 # define SCREEN_WIDTH 1920
-# define MINIMAP_SCALE .05
-# define MINIMAP_PLAYER_SCALE 100
-# define DIRECTION_LEN 400000000 // 80
-# define PI 3.141592653589793
-# define GAP 5
+# define ROT_SPEED 4
+# define MVT_SPEED 61
+# define VIEW_RANGE 60
+# define RENDER_RANGE 100000
+# define DIRECTION_LEN 80 // 400000000
 
+/* constants */
+# define PI 3.141592653589793
 # define R_RIGHT 124
 # define R_LEFT 123
 # define M_RIGHT 2
 # define M_LEFT 0
 # define M_FORWARD 13
 # define M_BACKWARD 1
-
-# define ROT_SPEED 5
-# define MVT_SPEED 3 // makhash ykon y9sm 100
-# define VIEW_RANGE 60
-# define RENDER_RANGE 5000
 
 /* enums */
 typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
@@ -64,7 +62,7 @@ typedef struct s_vector
 {
 	t_pos	origin;
 	t_pos	direction;
-	float		heigh;
+	float	heigh;
 }					t_vector;
 typedef struct s_img_data {
 	void	*img;
@@ -93,10 +91,9 @@ typedef struct s_game
 	int				units_height;
 	int				units_width;
 	int				minimap_block_d;
-	int				minimap_player_d;
 	t_pressed_keys	pressed_keys;
 	t_orientation	player_orientation;
-	t_vector		player_vector;
+	t_vector		player;
 	int				player_view_angle;
 }					t_game;
 typedef struct s_ray_data
@@ -105,29 +102,37 @@ typedef struct s_ray_data
 	t_orientation	orientation;
 	int				intersection;
 	int				code;
-	t_orientation	v_orientation; // you dont need this
-	t_orientation	h_orientation; // you dont need this
+	t_orientation	v_orientation;
+	t_orientation	h_orientation;
 }				t_ray_data;
-
 
 /* -> prototypes <- */
 /* global */
 t_img_data	*img_save(t_img_data *data);
 
-/* minimap */
-void		put_pixel(int x, int y, int color);
-void		draw_square(int x, int y, int d, int color);
-void		draw_blocks(t_game *game, int d);
-void		draw_player(t_game game, int d);
-void		draw_line(t_vector line, int color);
+/* keys handler */
+int			key_press_handler(int keycode, t_pressed_keys *pressed_keys);
+int			key_release_handler(int keycode, t_pressed_keys *pressed_keys);
+void		display_pressed_buttons(t_game *game);
 
 /* objects */
-t_pos		new_pos(int x, int y);
+t_pos		new_pos(float x, float y);
 t_vector	new_vector(t_pos origin, t_pos direction);
 
+/* movements */
+void		update_player(t_game *game);
+
+/* raycaster */
+t_ray_data	cast_ray(t_vector ray, t_game *game, int color);
+void		get_v_intersection(t_game *game, t_pos *h_intersection,
+				t_vector ray, t_ray_data *data);
+void		get_h_intersection(t_game *game, t_pos *h_intersection,
+				t_vector ray, t_ray_data *data);
+float		get_distance(t_pos p1, t_pos p2);
+
 /*3d* rendering*/
-void	draw_3d(t_game *game, float *distance, char *status, int *intersection);
-void	put_pixel2(int x, int y, int color);
+void		draw_3d(t_game *game, float *distance,
+				char *status, int *intersection);
+void		put_pixel2(int x, int y, int color);
 
 #endif
-
