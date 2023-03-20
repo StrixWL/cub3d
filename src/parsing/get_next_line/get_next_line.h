@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 01:45:42 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 18:59:09 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/20 20:28:31 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define BUFFER_SIZE 1
+# define BUFFER_SIZE 10
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);

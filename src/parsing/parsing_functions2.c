@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 12:22:51 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 14:30:41 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/20 20:36:40 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,28 @@ int	take_w_h(char *s, int *w, int *h)
 	return (free(width), free(heigh), 0);
 }
 
+int	search_quotes(char *s)
+{
+	int	comment;
+	int	quotes;
+
+	quotes = 0;
+	comment = 0;
+	while (*s)
+	{
+		if ((*s) == '/' && *(s + 1) == '*')
+			comment++;
+		if ((*s) == '*' && *(s + 1) == '/' && comment)
+			comment--;
+		if (*s == '"' && !comment)
+			quotes++;
+		if (quotes == 2)
+			return (1);
+		s++;
+	}
+	return (0);
+}
+
 char	*read_picture(int fd)
 {
 	int		i;
@@ -106,17 +128,19 @@ char	*read_picture(int fd)
 	char	*keep;
 	char	*whole_pic;
 
+	s = malloc(sizeof(char));
 	i = 0;
 	whole_pic = ft_strdup("");
-	s = get_next_line(fd);
-	while (i < 4)
+	read(fd, s, 1);
+	while (s)
 	{
 		keep = whole_pic;
 		whole_pic = ft_strjoin(whole_pic, s);
 		free(keep);
-		free(s);
-		s = get_next_line(fd);
-		i++;
+		if (search_quotes(whole_pic))
+			break ;
+		read(fd, s, 1);
 	}
+	free(s);
 	return (whole_pic);
 }

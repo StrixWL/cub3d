@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 01:01:37 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/20 18:04:55 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/20 20:45:31 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,5 +151,5 @@ int	main(int argc, char **argv)
 // convert the floor and ceil to int (done)
 // check  on f_c color (done)
 // empty map (done)
-// while (s)
+// while (s) (done)
 // check leaks in errors (map and elems)

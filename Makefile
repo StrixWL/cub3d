@@ -6,7 +6,7 @@
 #    By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/02 08:10:39 by bel-amri          #+#    #+#              #
-#    Updated: 2023/03/20 13:15:15 by yabidi           ###   ########.fr        #
+#    Updated: 2023/03/20 21:34:54 by yabidi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ CC=				cc
 HEADERS=		includes/header.h
 SRC_DIR=		src
 SRC_FILES=		main.c \
-				parsing_functions.c \
-				parsing_functions2.c \
-				parsing_functions3.c \
+				src/parsing/parsing_functions.c \
+				src/parsing/parsing_functions2.c \
+				src/parsing/parsing_functions3.c \
 				src/keys_handler.c \
 				src/objects.c \
 				src/raycasting.c \
