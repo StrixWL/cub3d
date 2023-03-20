@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   v_intersections.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 11:27:43 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/17 21:20:01 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/20 13:17:21 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	get_v_intersection(t_game *game, t_pos *v_intersection,
 	float	a;
 	float	b;
 	t_pos	delta;
-	int		range;
 
 	delta.x = ray.origin.x - ray.direction.x;
 	delta.y = ray.origin.y - ray.direction.y;

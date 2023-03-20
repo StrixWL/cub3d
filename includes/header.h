@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/17 21:30:47 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/20 15:06:48 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <math.h>
 # include <stdlib.h>
+# include <cub3d.h>
 
 /* variables */
 # define SCREEN_HEIGHT 1080
@@ -38,19 +39,13 @@
 # define M_BACKWARD 1
 
 /* enums */
-typedef enum e_boolean {FALSE, TRUE, ZAB}	t_bool;
+typedef enum e_boolean {FALSE, TRUE}	t_bool;
 typedef enum e_direction {
 	NORTH,
 	SOUTH,
 	EAST,
 	WEST
 }				t_orientation;
-/* 7it 3arfek 7mar
-	NORTH: LFO9
-	SOUTH: LTE7T
-	WEST: LISER
-	EAST: LIMEN
-*/
 
 /* -> structs <- */
 typedef struct s_pos
@@ -65,11 +60,13 @@ typedef struct s_vector
 	float	heigh;
 }					t_vector;
 typedef struct s_img_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
+	void				*img;
+	char				*addr;
+	int					bits_per_pixel;
+	int					line_length;
+	int					endian;
+	int					w;
+	int					h;
 }				t_img_data;
 typedef struct s_pressed_keys {
 	t_bool	r_right;
@@ -81,20 +78,27 @@ typedef struct s_pressed_keys {
 }				t_pressed_keys;
 typedef struct s_game
 {
-	void			*mlx;
-	void			*win;
-	t_img_data		img;
-	char			*map;
-	int				map_len;
-	int				map_height;
-	int				map_width;
-	int				units_height;
-	int				units_width;
-	int				minimap_block_d;
-	t_pressed_keys	pressed_keys;
-	t_orientation	player_orientation;
-	t_vector		player;
-	int				player_view_angle;
+	void				*mlx;
+	void				*win;
+	t_img_data			img;
+	char				*map;
+	int					map_len;
+	int					map_height;
+	int					map_width;
+	int					units_height;
+	int					units_width;
+	int					minimap_block_d;
+	t_pressed_keys		pressed_keys;
+	t_orientation		player_orientation;
+	t_vector			player;
+	int					player_view_angle;
+	struct t_settings	*settings;
+	struct s_img_data	img_no;
+	struct s_img_data	img_so;
+	struct s_img_data	img_ea;
+	struct s_img_data	img_we;
+	int					floor_color;
+	int					ciel_color;
 }					t_game;
 typedef struct s_ray_data
 {
@@ -123,16 +127,23 @@ t_vector	new_vector(t_pos origin, t_pos direction);
 void		update_player(t_game *game);
 
 /* raycaster */
-t_ray_data	cast_ray(t_vector ray, t_game *game, int color);
+t_ray_data	cast_ray(t_vector ray, t_game *game);
 void		get_v_intersection(t_game *game, t_pos *h_intersection,
 				t_vector ray, t_ray_data *data);
 void		get_h_intersection(t_game *game, t_pos *h_intersection,
 				t_vector ray, t_ray_data *data);
 float		get_distance(t_pos p1, t_pos p2);
 
-/*3d* rendering*/
+/* 3d rendering*/
 void		draw_3d(t_game *game, float *distance,
 				char *status, int *intersection);
 void		put_pixel2(int x, int y, int color);
+
+/* parsing */
+int			fill_img_data(t_game *game, char *s, t_img_data *img);
+int			fill_imgs_data(t_game *game);
+void		get_x_y_orientation(t_game *game, char *map, int width);
+int			take_floor_color(t_game *game, char *s);
+int			take_ciel_color(t_game *game, char *s);
 
 #endif

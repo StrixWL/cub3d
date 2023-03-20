@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:09:01 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/17 21:38:40 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/20 13:16:36 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ float	get_distance(t_pos p1, t_pos p2)
 	return (d);
 }
 
-t_ray_data	cast_ray(t_vector ray, t_game *game, int color)
+t_ray_data	cast_ray(t_vector ray, t_game *game)
 {
 	t_pos		h_intersection;
 	t_pos		v_intersection;

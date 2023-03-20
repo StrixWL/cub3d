@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   h_intersections.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 11:27:43 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/17 21:24:23 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/20 13:18:06 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,6 @@ void	looking_down_handler(t_game *game, t_pos *h_intersection,
 void	get_h_intersection(t_game *game, t_pos *h_intersection,
 					t_vector ray, t_ray_data *data)
 {
-	float	a;
-	float	b;
-	t_pos	delta;
-	int		range;
-
 	if (ray.origin.y > ray.direction.y)
 		looking_up_handler(game, h_intersection, ray, data);
 	else
