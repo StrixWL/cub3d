@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+         #
+#    By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/02 08:10:39 by bel-amri          #+#    #+#              #
-#    Updated: 2023/03/20 21:34:54 by yabidi           ###   ########.fr        #
+#    Updated: 2023/03/21 17:57:28 by bel-amri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CC=				cc
 HEADERS=		includes/header.h
 SRC_DIR=		src
 SRC_FILES=		main.c \
+				src/init.c \
 				src/parsing/parsing_functions.c \
 				src/parsing/parsing_functions2.c \
 				src/parsing/parsing_functions3.c \
@@ -23,9 +24,9 @@ SRC_FILES=		main.c \
 				src/objects.c \
 				src/raycasting.c \
 				src/player_movement.c \
+				src/draw_3d.c \
 				src/intersections/v_intersections.c \
 				src/intersections/h_intersections.c \
-				src/draw_3d.c \
 				src/parsing/get_next_line/get_next_line.c \
 				src/parsing/get_next_line/get_next_line_utils.c \
 				src/parsing/tools/ft_strcmp.c \
@@ -50,7 +51,7 @@ all: $(NAME)
 
 
 $(NAME): $(OBJ_FILES)
-	$(CC) $(OBJ_FILES) -lmlx -framework OpenGL -framework AppKit -o $(NAME) -fsanitize=address
+	$(CC) $(OBJ_FILES) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
 %.o: %.c $(HEADERS)
 	$(CC) $(FLAGS) -Imlx -Iincludes -c $< -o $@

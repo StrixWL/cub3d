@@ -6,13 +6,13 @@
 /*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 04:41:25 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/17 09:09:13 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:38:59 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-static void	handle_rotation(t_game *game, float x1, float y1)
+static void	handle_rotation(t_game *game)
 {
 	if (game->pressed_keys.r_left)
 	{
@@ -26,8 +26,6 @@ static void	handle_rotation(t_game *game, float x1, float y1)
 		if (game->player_view_angle >= 360)
 			game->player_view_angle = game->player_view_angle - 360;
 	}
-	x1 = DIRECTION_LEN * cos(game->player_view_angle * PI / 180);
-	y1 = DIRECTION_LEN * sin(game->player_view_angle * PI / 180);
 }
 
 static t_bool	is_wall(t_game *game, t_pos cord)
@@ -37,8 +35,8 @@ static t_bool	is_wall(t_game *game, t_pos cord)
 
 	cord.x += game->player.origin.x;
 	cord.y += game->player.origin.y;
-	wall_x = cord.x / game->minimap_block_d;
-	wall_y = cord.y / game->minimap_block_d;
+	wall_x = cord.x / BLOCK_D;
+	wall_y = cord.y / BLOCK_D;
 	if (wall_x + wall_y * game->map_width > game->map_len
 		|| wall_x + wall_y * game->map_width < 0)
 		return (FALSE);
@@ -90,7 +88,7 @@ static void	handle_left_right(t_game *game, float x1, float y1)
 void	update_player(t_game *game)
 {
 	if (game->pressed_keys.r_left || game->pressed_keys.r_right)
-		handle_rotation(game, 0, 0);
+		handle_rotation(game);
 	if (game->pressed_keys.m_forward || game->pressed_keys.m_backward)
 		handle_forward_backward(game, 0, 0);
 	if (game->pressed_keys.m_left || game->pressed_keys.m_right)

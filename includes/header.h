@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/20 15:06:48 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/21 18:32:53 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 # define MVT_SPEED 61
 # define VIEW_RANGE 60
 # define RENDER_RANGE 100000
-# define DIRECTION_LEN 80 // 400000000
-
+# define DIRECTION_LEN 400000000 // 400000000
+# define BLOCK_D 200
 /* constants */
 # define PI 3.141592653589793
 # define R_RIGHT 124
@@ -85,8 +85,6 @@ typedef struct s_game
 	int					map_len;
 	int					map_height;
 	int					map_width;
-	int					units_height;
-	int					units_width;
 	int					minimap_block_d;
 	t_pressed_keys		pressed_keys;
 	t_orientation		player_orientation;
@@ -111,8 +109,10 @@ typedef struct s_ray_data
 }				t_ray_data;
 
 /* -> prototypes <- */
-/* global */
+/* init */
 t_img_data	*img_save(t_img_data *data);
+void		init_keys(t_game *game);
+void		set_player_data(t_game *game);
 
 /* keys handler */
 int			key_press_handler(int keycode, t_pressed_keys *pressed_keys);
@@ -135,9 +135,8 @@ void		get_h_intersection(t_game *game, t_pos *h_intersection,
 float		get_distance(t_pos p1, t_pos p2);
 
 /* 3d rendering*/
-void		draw_3d(t_game *game, float *distance,
-				char *status, int *intersection);
-void		put_pixel2(int x, int y, int color);
+void		draw_3d(t_game *game, t_ray_data *data);
+void		put_pixel(int x, int y, int color);
 
 /* parsing */
 int			fill_img_data(t_game *game, char *s, t_img_data *img);

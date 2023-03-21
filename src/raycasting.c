@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:09:01 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/20 13:16:36 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/21 08:47:32 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ t_ray_data	cast_ray(t_vector ray, t_game *game)
 	data[0].distance = get_distance(ray.origin, h_intersection);
 	data[1].distance = get_distance(ray.origin, v_intersection);
 	data[0].intersection = h_intersection.x - floor(h_intersection.x
-			/ game->minimap_block_d) * game->minimap_block_d;
+			/ BLOCK_D) * BLOCK_D;
 	data[0].orientation = data[0].h_orientation;
 	data[1].intersection = v_intersection.y - floor(v_intersection.y
-			/ game->minimap_block_d) * game->minimap_block_d;
+			/ BLOCK_D) * BLOCK_D;
 	data[1].orientation = data[1].v_orientation;
 	if (data[1].distance < data[0].distance)
 		return (data[1]);

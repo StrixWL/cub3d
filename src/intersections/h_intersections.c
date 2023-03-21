@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   h_intersections.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 11:27:43 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/20 13:18:06 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/21 08:47:32 by bel-amri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static t_bool	is_wall(t_game *game, t_pos cord)
 	int		wall_x;
 	int		wall_y;
 
-	wall_x = cord.x / game->minimap_block_d;
-	wall_y = cord.y / game->minimap_block_d;
+	wall_x = cord.x / BLOCK_D;
+	wall_y = cord.y / BLOCK_D;
 	if (wall_x + wall_y * game->map_width > game->map_len
 		|| wall_x + wall_y * game->map_width < 0)
 		return (FALSE);
@@ -40,17 +40,17 @@ void	looking_up_handler(t_game *game, t_pos *h_intersection,
 	a = delta.y / delta.x;
 	b = ray.origin.y - a * ray.origin.x;
 	data->h_orientation = NORTH;
-	h_intersection->y = floor(ray.origin.y / game->minimap_block_d)
-		* game->minimap_block_d;
-	range = h_intersection->y - RENDER_RANGE - 1000;
+	h_intersection->y = floor(ray.origin.y / BLOCK_D)
+		* BLOCK_D;
+	range = h_intersection->y - RENDER_RANGE - 10000;
 	h_intersection->x = ray.origin.x;
 	while (h_intersection->y > range)
 	{
 		if (delta.x)
 			h_intersection->x = (h_intersection->y - b) / a;
 		if (!is_wall(game, new_pos(h_intersection->x,
-					h_intersection->y - game->minimap_block_d)))
-			h_intersection->y -= game->minimap_block_d;
+					h_intersection->y - BLOCK_D)))
+			h_intersection->y -= BLOCK_D;
 		else
 			break ;
 	}
@@ -69,16 +69,16 @@ void	looking_down_handler(t_game *game, t_pos *h_intersection,
 	a = delta.y / delta.x;
 	b = ray.origin.y - a * ray.origin.x;
 	data->h_orientation = SOUTH;
-	h_intersection->y = (floor(ray.origin.y / game->minimap_block_d)
-			* game->minimap_block_d) + game->minimap_block_d;
-	range = h_intersection->y + RENDER_RANGE + 1000;
+	h_intersection->y = (floor(ray.origin.y / BLOCK_D)
+			* BLOCK_D) + BLOCK_D;
+	range = h_intersection->y + RENDER_RANGE + 10000;
 	h_intersection->x = ray.origin.x;
 	while (h_intersection->y < range)
 	{
 		if (delta.x)
 			h_intersection->x = (h_intersection->y - b) / a;
 		if (!is_wall(game, *h_intersection))
-			h_intersection->y += game->minimap_block_d;
+			h_intersection->y += BLOCK_D;
 		else
 			break ;
 	}
