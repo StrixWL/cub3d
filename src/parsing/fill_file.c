@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 17:36:59 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 20:28:18 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/22 10:46:50 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	fill_file(int fd, t_file *file)
 	s = get_next_line(fd);
 	if (!s)
 	{
+		write(2, "Error\nempty map", 16);
 		close(fd);
 		exit(1);
 	}
