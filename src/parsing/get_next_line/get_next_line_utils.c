@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 01:43:41 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/08 09:12:11 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/22 10:15:53 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	n = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
 	if (n == NULL)
-		return (0);
+		exit (1);
 	while (*s1)
 	{
 		n[i] = *s1;

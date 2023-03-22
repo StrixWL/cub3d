@@ -6,11 +6,33 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:57:19 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 15:15:56 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/22 10:17:14 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <header.h>
+
+int	search_quotes(char *s)
+{
+	int	comment;
+	int	quotes;
+
+	quotes = 0;
+	comment = 0;
+	while (*s)
+	{
+		if ((*s) == '/' && *(s + 1) == '*')
+			comment = 1;
+		if ((*s) == '*' && *(s + 1) == '/' && comment)
+			comment = 0;
+		if (*s == '"' && !comment)
+			quotes++;
+		if (quotes == 2)
+			return (1);
+		s++;
+	}
+	return (0);
+}
 
 int	get_w_h(int *w, int *h, int fd)
 {
@@ -21,6 +43,8 @@ int	get_w_h(int *w, int *h, int fd)
 	i = 0;
 	check = 0;
 	whole_pic = read_picture(fd);
+	if (!whole_pic)
+		return (-1);
 	while (whole_pic[i])
 	{
 		if (whole_pic[i] == '/' && whole_pic[i + 1] == '*')

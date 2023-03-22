@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 01:56:57 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 20:28:12 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/21 20:59:46 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,6 @@ int			fill_map(t_file *file, t_settings *settings);
 int			check_line(t_file *file, char *s, char *s2, int *player);
 int			is_multiplayer(char *keep_line, char *s, int player);
 char		*remove_spaces(char *s);
+void		remove_new_lines(t_file *file);
 
 #endif

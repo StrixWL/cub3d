@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 12:23:23 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 14:30:58 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/22 10:12:08 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*conv_hex(int number, char *hexadecimal)
 	char	*ret;
 
 	my_num = malloc(sizeof(char) + 1);
+	if (!my_num)
+		exit (1);
 	my_num[1] = '\0';
 	if (number >= 16)
 		keep = conv_hex((number / 16), hexadecimal);
@@ -77,6 +79,8 @@ int	take_floor_color(t_game *game, char *s)
 
 	i = 0;
 	rgb = ft_split(s, ',');
+	if (!rgb)
+		return (-1);
 	hex = ft_strdup("");
 	while (rgb[i])
 	{
@@ -90,6 +94,7 @@ int	take_floor_color(t_game *game, char *s)
 	}
 	free(rgb);
 	game->floor_color = conv_int(hex);
+	free(hex);
 	return (0);
 }
 
@@ -102,6 +107,8 @@ int	take_ciel_color(t_game *game, char *s)
 	int		i;
 
 	rgb = ft_split(s, ',');
+	if (!rgb)
+		return (-1);
 	hex = ft_strdup("");
 	i = 0;
 	while (rgb[i])
@@ -116,5 +123,6 @@ int	take_ciel_color(t_game *game, char *s)
 	}
 	free(rgb);
 	game->ciel_color = conv_int(hex);
+	free(hex);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 12:08:05 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 15:17:27 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/21 21:06:30 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ char	*ft_strdup2(char *src)
 	if (src[len - 1] == '\n')
 		len--;
 	res = malloc(sizeof(char) * len + 1);
-	res[len] = '\0';
 	if (res == NULL)
 		return (0);
+	res[len] = '\0';
 	while (i < len)
 	{
 		res[i] = src[i];

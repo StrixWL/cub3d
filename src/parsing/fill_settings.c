@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 17:42:51 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 18:00:05 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/22 09:58:58 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,23 +49,6 @@ int	check_color(char *str)
 	if (s[j] && (s[j] != ' ' || s[j] != '\t' || s[j] != '\n'))
 		return (write(2, "Error\ncolor isn't valid", 23), -1);
 	return (free(s), 0);
-}
-
-void	remove_new_lines(t_file *file)
-{
-	int	i;
-
-	while (file)
-	{
-		i = 0;
-		while (file->line[i])
-		{
-			if (file->line[i] == '\n')
-				file->line[i] = '\0';
-			i++;
-		}
-		file = file->next;
-	}
 }
 
 int	is_elem2(t_settings *settings, t_file *file)
@@ -113,6 +96,8 @@ int	is_elem(t_settings *settings, t_file *file)
 	}
 	else if (is_elem2(settings, file))
 		return (1);
+	if (!settings->value)
+		return (-1);
 	return (0);
 }
 

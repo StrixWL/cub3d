@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 12:22:51 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 20:36:40 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/22 10:16:54 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,28 +99,6 @@ int	take_w_h(char *s, int *w, int *h)
 	return (free(width), free(heigh), 0);
 }
 
-int	search_quotes(char *s)
-{
-	int	comment;
-	int	quotes;
-
-	quotes = 0;
-	comment = 0;
-	while (*s)
-	{
-		if ((*s) == '/' && *(s + 1) == '*')
-			comment++;
-		if ((*s) == '*' && *(s + 1) == '/' && comment)
-			comment--;
-		if (*s == '"' && !comment)
-			quotes++;
-		if (quotes == 2)
-			return (1);
-		s++;
-	}
-	return (0);
-}
-
 char	*read_picture(int fd)
 {
 	int		i;
@@ -129,6 +107,8 @@ char	*read_picture(int fd)
 	char	*whole_pic;
 
 	s = malloc(sizeof(char));
+	if (!s)
+		return (NULL);
 	i = 0;
 	whole_pic = ft_strdup("");
 	read(fd, s, 1);

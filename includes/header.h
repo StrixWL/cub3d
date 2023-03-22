@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 16:33:06 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/21 18:32:53 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/21 20:57:26 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <math.h>
 # include <stdlib.h>
-# include <cub3d.h>
+# include "cub3d.h"
 
 /* variables */
 # define SCREEN_HEIGHT 1080
@@ -113,6 +113,8 @@ typedef struct s_ray_data
 t_img_data	*img_save(t_img_data *data);
 void		init_keys(t_game *game);
 void		set_player_data(t_game *game);
+int			render(t_game *game);
+void		init_mlx(t_game *game, int tabon);
 
 /* keys handler */
 int			key_press_handler(int keycode, t_pressed_keys *pressed_keys);
@@ -144,5 +146,7 @@ int			fill_imgs_data(t_game *game);
 void		get_x_y_orientation(t_game *game, char *map, int width);
 int			take_floor_color(t_game *game, char *s);
 int			take_ciel_color(t_game *game, char *s);
+void		take_parsing_infos(t_game *game, struct t_settings *settings);
+int			search_quotes(char *s);
 
 #endif

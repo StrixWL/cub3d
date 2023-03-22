@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 04:49:07 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/21 20:00:28 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/21 20:46:18 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,4 @@ void	set_player_data(t_game *game)
 		game->player_view_angle = 0;
 	else if (game->player_orientation == WEST)
 		game->player_view_angle = 180;
-	init_keys(game);
 }
