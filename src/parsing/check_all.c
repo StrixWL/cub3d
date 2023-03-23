@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 17:38:22 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/20 17:22:54 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/23 22:16:03 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,20 @@ char	*skip_spaces_and_emptylines(t_file **file)
 	return (NULL);
 }
 
+void	add_n_last_line(t_file *file)
+{
+	char	*temp;
+
+	while (file->next)
+		file = file->next;
+	if (file->line[ft_strlen(file->line) - 1] != '\n')
+	{
+		temp = file->line;
+		file->line = ft_strjoin(file->line, "\n");
+		free(temp);
+	}
+}
+
 int	check_all(t_file *file)
 {
 	int		i;
@@ -60,7 +74,7 @@ int	check_all(t_file *file)
 		if (!s)
 			break ;
 		if (is_first_line(s))
-			return (free_empty_lines(file),
+			return (free_empty_lines(file), add_n_last_line(file),
 				check_map_and_nelements_array(file, check_elem, s));
 		else if (check_elements(s, check_elem) != -1)
 			file = file->next;
