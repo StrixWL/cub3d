@@ -6,11 +6,16 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 20:06:14 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/21 20:44:34 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/23 09:34:40 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
+
+int	exit_all(void)
+{
+	exit(0);
+}
 
 void	init_mlx(t_game *game, int tabon)
 {	
@@ -19,6 +24,7 @@ void	init_mlx(t_game *game, int tabon)
 	game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");
 	mlx_hook(game->win, 2, 0, &key_press_handler, &game->pressed_keys);
 	mlx_hook(game->win, 3, 0, &key_release_handler, &game->pressed_keys);
+	mlx_hook(game->win, 17, 0L, &exit_all, NULL);
 	mlx_loop_hook(game->mlx, render, game);
 	game->img.img = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel,

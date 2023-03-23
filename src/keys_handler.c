@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keys_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 21:27:42 by bel-amri          #+#    #+#             */
-/*   Updated: 2023/03/17 21:38:54 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/22 21:59:58 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	key_press_handler(int keycode, t_pressed_keys *pressed_keys)
 		pressed_keys->m_left = TRUE;
 	if (keycode == M_RIGHT)
 		pressed_keys->m_right = TRUE;
+	if (keycode == 53)
+		exit(0);
 	return (0);
 }
 
