@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_3d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bel-amri <clorensunity@gmail.com>          +#+  +:+       +#+        */
+/*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 10:22:52 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/21 18:37:37 by bel-amri         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:32:16 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void	draw_line2(t_vector line,
 		y_color = (((where_y * 100) / line.heigh) * (img.h)) / 100;
 		x_color = (((intersection * 100)
 					/ BLOCK_D) * (img.w)) / 100;
-		put_pixel(line.origin.x, line.origin.y, color);
 		color = *((int *)(img.addr + (y_color * img.line_length
 						+ (x_color * (img.bits_per_pixel / 8)))));
+		put_pixel(line.origin.x, line.origin.y, color);
 		line.origin.y++;
 		where_y++;
 	}

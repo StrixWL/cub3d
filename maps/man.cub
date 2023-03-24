@@ -1,10 +1,10 @@
-C 56,27,97
-F 84,84,84
-
 SO textures/Lordvoldemort.xpm
 NO textures/stn.xpm
 WE textures/Lin-Shuang-Sword.xpm
 EA textures/miku.xpm
+
+C 56,27,97
+F 84,84,84
 
 111111111111111
 100000100000001

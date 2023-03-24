@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 12:22:51 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/22 10:16:54 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/24 12:23:41 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,25 +102,21 @@ int	take_w_h(char *s, int *w, int *h)
 char	*read_picture(int fd)
 {
 	int		i;
-	char	*s;
+	char	s;
 	char	*keep;
 	char	*whole_pic;
 
-	s = malloc(sizeof(char));
-	if (!s)
-		return (NULL);
 	i = 0;
 	whole_pic = ft_strdup("");
-	read(fd, s, 1);
+	read(fd, &s, 1);
 	while (s)
 	{
 		keep = whole_pic;
-		whole_pic = ft_strjoin(whole_pic, s);
+		whole_pic = ft_strjoin(whole_pic, &s);
 		free(keep);
 		if (search_quotes(whole_pic))
 			break ;
-		read(fd, s, 1);
+		read(fd, &s, 1);
 	}
-	free(s);
 	return (whole_pic);
 }

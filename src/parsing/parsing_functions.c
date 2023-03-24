@@ -6,7 +6,7 @@
 /*   By: yabidi <yabidi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:57:19 by yabidi            #+#    #+#             */
-/*   Updated: 2023/03/22 10:17:14 by yabidi           ###   ########.fr       */
+/*   Updated: 2023/03/24 12:07:39 by yabidi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ int	fill_img_data(t_game *game, char *s, t_img_data *img)
 	if (fd == -1)
 		return (write(2, "Error\ncouldn't open texture file", 32), -1);
 	check = get_w_h(&h, &w, fd);
-	if (check == -1 || !h || !w)
+	if (check == -1)
 	{
-		write(2, "Error\ncouldn't get heigh and width", 34);
+		write(2, "Error\ncouldn't get height and width", 35);
 		return (-1);
 	}
 	img->h = h;
